@@ -1,0 +1,243 @@
+{
+	"BUILD_DIR" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/schaken_autogen",
+	"CMAKE_BINARY_DIR" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken",
+	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
+	"CMAKE_LIST_FILES" : 
+	[
+		"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/CMakeLists.txt",
+		"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/CMakeFiles/3.22.1/CMakeSystem.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInitialize.cmake",
+		"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/CMakeFiles/3.22.1/CMakeCCompiler.cmake",
+		"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeSystemSpecificInformation.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeGenericSystem.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeInitializeConfigs.cmake",
+		"/usr/share/cmake-3.22/Modules/Platform/Linux.cmake",
+		"/usr/share/cmake-3.22/Modules/Platform/UnixPaths.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeCInformation.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake",
+		"/usr/share/cmake-3.22/Modules/Compiler/GNU-C.cmake",
+		"/usr/share/cmake-3.22/Modules/Compiler/GNU.cmake",
+		"/usr/share/cmake-3.22/Modules/Compiler/CMakeCommonCompilerMacros.cmake",
+		"/usr/share/cmake-3.22/Modules/Platform/Linux-GNU-C.cmake",
+		"/usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeCXXInformation.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeLanguageInformation.cmake",
+		"/usr/share/cmake-3.22/Modules/Compiler/GNU-CXX.cmake",
+		"/usr/share/cmake-3.22/Modules/Compiler/GNU.cmake",
+		"/usr/share/cmake-3.22/Modules/Platform/Linux-GNU-CXX.cmake",
+		"/usr/share/cmake-3.22/Modules/Platform/Linux-GNU.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfig.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreMacros.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QComposePlatformInputContextPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSEmulatorIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSKmsEglDeviceIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSX11IntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevKeyboardPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevMousePlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevTabletPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevTouchScreenPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QGtk3ThemePlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QLinuxFbIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QMinimalEglIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QSvgIconPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QSvgPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QVncIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWaylandEglPlatformIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWaylandIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWaylandXCompositeEglPlatformIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWaylandXCompositeGlxPlatformIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXcbEglIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXcbGlxIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXcbIntegrationPlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXdgDesktopPortalThemePlugin.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake",
+		"/usr/share/cmake-3.22/Modules/CMakeParseArguments.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake",
+		"/home/joachimverleysen/anaconda3/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/home/joachimverleysen/anaconda3/lib/cmake/Qt5/Qt5Config.cmake",
+		"/home/joachimverleysen/anaconda3/lib/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfig.cmake",
+		"/home/joachimverleysen/anaconda3/lib/cmake/Qt5/Qt5ConfigVersion.cmake",
+		"/home/joachimverleysen/anaconda3/lib/cmake/Qt5/Qt5Config.cmake",
+		"/home/joachimverleysen/anaconda3/lib/cmake/Qt5/Qt5ModuleLocation.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken",
+	"DEP_FILE" : "",
+	"DEP_FILE_RULE_NAME" : "",
+	"HEADERS" : 
+	[
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/SchaakGUI.h",
+			"Mu",
+			"EWIEGA46WW/moc_SchaakGUI.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/SchaakStuk.h",
+			"Mu",
+			"EWIEGA46WW/moc_SchaakStuk.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/game.h",
+			"Mu",
+			"EWIEGA46WW/moc_game.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/ChessWindow.h",
+			"Mu",
+			"C3EZHT2PJ7/moc_ChessWindow.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/chessboard.h",
+			"Mu",
+			"C3EZHT2PJ7/moc_chessboard.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/fileIO.h",
+			"Mu",
+			"C3EZHT2PJ7/moc_fileIO.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/message.h",
+			"Mu",
+			"C3EZHT2PJ7/moc_message.cpp",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/resources.h",
+			"Mu",
+			"C3EZHT2PJ7/moc_resources.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/schaken_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/schaken_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [ "QT_CORE_LIB", "QT_GUI_LIB", "QT_WIDGETS_LIB" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/include",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/include/QtWidgets",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/include/QtGui",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/include/QtCore",
+		"/home/joachimverleysen/QT/5.15.2/gcc_64/mkspecs/linux-g++",
+		"/usr/include",
+		"/usr/include/c++/11",
+		"/usr/include/x86_64-linux-gnu/c++/11",
+		"/usr/include/c++/11/backward",
+		"/usr/lib/gcc/x86_64-linux-gnu/11/include",
+		"/usr/local/include",
+		"/usr/include/x86_64-linux-gnu"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : 
+	[
+		"/usr/bin/c++",
+		"-dM",
+		"-E",
+		"-c",
+		"/usr/share/cmake-3.22/Modules/CMakeCXXCompilerABI.cpp"
+	],
+	"MOC_PREDEFS_FILE" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/schaken_autogen/moc_predefs.h",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 6,
+	"PARSE_CACHE_FILE" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/CMakeFiles/schaken_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "/home/joachimverleysen/QT/5.15.2/gcc_64/bin/moc",
+	"QT_UIC_EXECUTABLE" : "",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/CMakeFiles/schaken_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/SchaakGUI.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/SchaakStuk.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/game.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/ChessWindow.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/chessboard.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/fileIO.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/message.cpp",
+			"Mu",
+			null
+		],
+		[
+			"/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/main.cpp",
+			"Mu",
+			null
+		]
+	],
+	"VERBOSITY" : 0
+}
