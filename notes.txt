@@ -1,4 +1,0 @@
-waarom fakemove functie appart?
-
-optimisation:
-- castleValid funcs: controlledSquares -> pinned pieces or not??

@@ -6,8 +6,10 @@
 #include "game.h"
 #include <algorithm>
 #include <iostream>
+#include <random>     // voor std::default_random_engine en std::random_device
+
 #include "SchaakStuk.h"
-using std::find; using std::cout;
+using namespace std;
 
 Game::Game() {
 
@@ -61,7 +63,6 @@ void Game::setStartBord() {
 
 
 }
-//todo: no piece selection possible when game ends (not urgent)
 
 // Verplaats stuk s naar positie (r,k)
 // Als deze move niet mogelijk is, wordt false teruggegeven
@@ -127,82 +128,134 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     }
     return false;
 }
-//todo: en passant piece threat mark doesn't stay after unselecting and reselecting the pawn
-void Game::aiMoves() {
+
+void Game::aiChoses() { // func where ai choses a piece + position to move
+    vector<SchaakStuk*> shuffled = getActivePieces();
+
+    //shuffle vector - Met hulp van Chat GPT
+    random_device rd;
+    default_random_engine rng(rd());    // initialise random number generator
+
+    // Willekeurig schudden van de vector
+    std::shuffle(shuffled.begin(), shuffled.end(), rng);
+    // shuffled now contains the active pieces but shuffled
+
+    if (turn) return;   // It should be black's turn
     // This function allows to play against AI player. AI is black
 
-     // Choose a move. Priority = checkmate, check, capture, random
-    pair<int,int> targetPos(-1,-1);
+    // Choose a move. Priority = checkmate, check, capture, random
     SchaakStuk* movingPiece = nullptr;   // piece that will be chosen to move
+    pair<int,int> myPos(-1,-1); // will be set to original pos of moving piece
     bool found = false;
-     // Check if checkmate can be delivered:
-     for (auto p : getActivePieces()) {
-         if (found) break;
-         pair<int,int> myPos = p->getPos();
-         for (auto z : p->geldige_zetten(*this)) {
-             if (found) break;
-             fakeMove(p, z.first, z.second);  // execute the FAKE MOVE (GUI won't be updated)
-             fakeMoveMade=true;
-             if (schaakmat(wit)) targetPos = z; found = true;
+    // Check if checkmate can be delivered:
+    std::shuffle(shuffled.begin(), shuffled.end(), rng);    // shuffle the pieces-vector
+
+    for (auto p : shuffled) {
+        if (found) break;
+        if (p->getKleur()==wit) continue;
+        myPos = p->getPos();
+        for (auto z : p->geldige_zetten(*this)) {
+            if (found) break;
+            aiFakeMove(p, z.first, z.second);  // execute the FAKE MOVE (GUI won't be updated)
+
+
+            aiFakeMoveMade=true;
+//            if (schaakmat(wit)) {
+//                aiTargetPos = z;
+//                found = true;
+//                movingPiece = p;
+//
+//            }
             // Undo the fake move
-             fakeMove(p, myPos.first, myPos.second); // move the piece back to myPos
-             fakeMoveMade=false; // fake move is undone -> var back to false
-             tempPiece=nullptr; // resetting purposes
-         }
-     }
-
-     if (!found) {
-         // Check if check is possible
-         for (auto p: getActivePieces()) {
-             if (found) break;
-             pair<int, int> myPos = p->getPos();
-             for (auto z: p->geldige_zetten(*this)) {
-                 if (found) break;
-                 fakeMove(p, z.first, z.second);  // execute the FAKE MOVE (GUI won't be updated)
-                 fakeMoveMade = true;
-                 if (schaak(wit)) targetPos = z;
-                 found = true;
-                 // Undo the fake move
-                 fakeMove(p, myPos.first, myPos.second); // move the piece back to myPos
-                 fakeMoveMade = false; // fake move is undone -> var back to false
-                 tempPiece = nullptr; // resetting purposes
-             }
-         }
-     }
-
-
-     if (!found) {
-         // Check if a capture is possible
-         for (auto p : getActivePieces()) {
-             if (found) break;
-             pair<int,int> myPos = p->getPos();
-             for (auto z : p->geldige_zetten(*this)) {
-                 if (found) break;
-                 if (getPiece(z.first, z.second) != nullptr) {  // move involves a capture
-                 targetPos = z; found = true;
-                 }
-             }
-         }
-     }
+            aiFakeMove(p, myPos.first, myPos.second); // move the piece back to myPos
+            aiFakeMoveMade=false; // fake move is undone -> var back to false
+            tempPiece_2=nullptr; // resetting purposes
+        }
+    }
 
     if (!found) {
-        // If above failed, just do a random move
-        for (auto p : getActivePieces()) {
+        // Check if check is possible
+        std::shuffle(shuffled.begin(), shuffled.end(), rng);    // shuffle the pieces-vector
+
+        for (auto p: shuffled) {
             if (found) break;
-            pair<int,int> myPos = p->getPos();
-            for (auto z : p->geldige_zetten(*this)) {
+            if (p->getKleur()==wit) continue;
+            myPos = p->getPos();
+            for (auto z: p->geldige_zetten(*this)) {
                 if (found) break;
-                targetPos = z; found = true;    // Take the first move available
+                aiFakeMove(p, z.first, z.second);  // execute the FAKE MOVE (GUI won't be updated)
+                aiFakeMoveMade = true;
+                if (schaak(wit)) {
+                    aiTargetPos = z;
+                    found = true;
+                    movingPiece = p;
+
+                }
+                // Undo the fake move
+                aiFakeMove(p, myPos.first, myPos.second); // move the piece back to myPos
+                aiFakeMoveMade = false; // fake move is undone -> var back to false
+                tempPiece_2 = nullptr; // resetting purposes
             }
         }
     }
 
-     if (found) {
-         move(movingPiece, targetPos.first, targetPos.second);
-         moveCount++;
-     }
+
+    if (!found) {
+        // Check if a capture is possible
+        std::shuffle(shuffled.begin(), shuffled.end(), rng);    // shuffle the pieces-vector
+
+        for (auto p : shuffled) {
+            if (found) break;
+            if (p->getKleur()==wit) continue;
+            myPos = p->getPos();
+            for (auto z : p->geldige_zetten(*this)) {
+                if (found) break;
+                if (getPiece(z.first, z.second) != nullptr) {  // move involves a capture
+                    aiTargetPos = z; found = true;
+                    movingPiece = p;
+
+                }
+            }
+        }
+    }
+
+    if (!found) {
+        // If above failed, just do a random move
+        std::shuffle(shuffled.begin(), shuffled.end(), rng);    // shuffle the pieces-vector
+
+        for (auto p : shuffled) {
+            if (found) break;
+            if (p->getKleur()==wit) continue;
+            myPos = p->getPos();
+            for (auto z : p->geldige_zetten(*this)) {
+                if (found) break;
+                aiTargetPos = z;
+                found = true;    // Take the first move available
+                movingPiece = p;
+            }
+        }
+    }
+
+    if (found) {
+        // movingPiece shouldn't be nullptr
+        aiSelection = movingPiece;
+    }
+}
+
+void Game::aiMoves() {
+    pair<int,int> myPos = aiSelection->getPos();
+    ud_capturedPiece.push_back(getPiece(aiTargetPos.first, aiTargetPos.second));    // update undo-stack
+
+    setPiece(aiTargetPos.first, aiTargetPos.second, aiSelection);
+
+    aiSelection->setPos(aiTargetPos);
+    setPiece(myPos.first, myPos.second, nullptr);
+
+
+     
 
 }
+//todo: undo castle + en passant
 
 void Game::undo() {
     pair<int,int> originalPos = ud_prevPos.back();
@@ -330,6 +383,42 @@ bool Game::fakeMove(SchaakStuk* s, int r, int k) {
 }
 // Help function
 // Checks if a certain move will put the moving player himself in check = selfcheck (not legal)
+
+
+bool Game::aiFakeMove(SchaakStuk* s, int r, int k) {
+// seperate function because of overwriting problems of variable tempPiece
+// func stays the same except for some var substitutions
+
+    if (s == nullptr) {
+        return false; // Onmogelijk om een nul-pointer te verplaatsen
+    }
+
+    // Controleer of de opgegeven positie binnen het schaakbord ligt
+    if (r < 0 || r > 7 || k < 0 || k > 7 ) {
+        return false; // Ongeldige positie (buiten bord)
+    }
+
+    // We don't check if the move is within mogelijke_zetten
+    auto myPos = s->getPos();
+    pair<int, int> targetPos(r, k);
+
+    // Geldige positie voor de zet
+
+    // Verplaats het schaakstuk naar het nieuwe veld
+    if (getPiece(r,k)!=nullptr) tempPiece_2= getPiece(r,k); // save this piece to restore it in the "undo fake move"
+    setPiece(r,k,s);
+    // Wis het originele veld
+    setPiece(myPos.first, myPos.second, nullptr);
+
+    // If this is the "undo" of the fake move AND a piece was captured in the fake move, we must restore this piece (=tempPiece_2)
+    // how do we know if there is a piece to restore? -> if tempPiece_2 != nullptr
+    if (tempPiece_2 != nullptr && aiFakeMoveMade) setPiece(myPos.first, myPos.second, tempPiece_2);   // restore tempPiece_2
+    // Werk de positie van het schaakstuk bij
+    s->setPos(targetPos);
+
+    return true;
+
+}
 
 // Geeft true als kleur schaak staat
 bool Game::schaak(zw kleur) {

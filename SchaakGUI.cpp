@@ -41,6 +41,7 @@ for (int i=0; i<8; i++) {
 // geklikt wordt. x,y geeft de positie aan waar er geklikt
 // werd; r is de 0-based rij, k de 0-based kolom
 void SchaakGUI::clicked(int r, int k) {
+    if (g.schaakmat(wit) || g.schaakmat(zwart) || g.pat(wit) || g.pat(zwart)) return;
 
     // Wat hier staat is slechts een voorbeeldje dat wordt afgespeeld ter illustratie.
     // Jouw code zal er helemaal anders uitzien en zal enkel de aanpassing in de spelpositie maken en er voor
@@ -50,15 +51,6 @@ void SchaakGUI::clicked(int r, int k) {
     // In jouw geval zullen de stukken uit game g komen
     pair<int, int> clickedPos(r, k);
     SchaakStuk *clickedItem = g.getPiece(r, k);     // can be a piece or a nullptr (empty square)
-//    if (clickedPiece!=nullptr) {
-//        g.move(clickedPiece, 5, 4);     // para 's' CAN'T be a nullptr !!!
-//
-//    }
-//    update();
-
-
-//     Check if a valid piece (own color) was selected
-
 
 
 
@@ -70,7 +62,6 @@ void SchaakGUI::clicked(int r, int k) {
                 selectedPiece = clickedItem;
                 selectionPos.first = r;
                 selectionPos.second = k;
-                std::cout<< "PIECE SELECTED"<<'\n';
 
                 // SET TILE/PIECE MARKING
                 // selection mark
@@ -103,7 +94,7 @@ void SchaakGUI::clicked(int r, int k) {
     // the second click can be: 1) the target position   OR   2) the current selection -> unselect
     pair<int,int> myPos = selectedPiece->getPos(); // original position of the selected piece
     if (selectionPos == clickedPos) {     // The current selection is clicked again -> unselect
-        pieceSelected = false;  cout <<"UNSELECTED\n";
+        pieceSelected = false;
         vector<pair<int,int>> validMoves = selectedPiece->geldige_zetten(g);
         setTileSelect(r,k,false);
         for (auto p : validMoves) {
@@ -145,114 +136,140 @@ void SchaakGUI::clicked(int r, int k) {
     auto it = std::find(validMoves.begin(), validMoves.end(), clickedPos);
     if (it != validMoves.end()) {       // Valid position
         g.move(selectedPiece, clickedPos.first, clickedPos.second);
+        afterTheMove(clickedPos, myPos, validMoves);
 
-        g.ud_lastMovingPiece.push_back(selectedPiece);  // purpose = undo func
-        g.ud_prevPos.push_back(selectionPos);   // original pos of last moving piece
-
-        // empty the Redo-Stacks
-        g.rd_prevPos.clear();
-        g.rd_lastMovingPiece.clear();
-
-
-        // check for PROMOTION
-
-        if (selectedPiece->getNaam()==pion &&
-                (clickedPos.first==0 || clickedPos.first==7))
-            g.promote(clickedPos.first, clickedPos.second);
-
-
-
-        // note: at this point, selectedPiece is still the piece that just moved
-
-        // Check for En Passant:
-        // We check if a pawn just moved 2 squares. In that case we set epSquare to the pos behind the pawn
-        // In the following turn of the opponent, any pawn that stands next to pawn that previously moved (2 squares) can capture EP
-
-        zw oppkleur = wit; if (selectedPiece->getKleur()==wit) oppkleur = zwart;
-        vector<pair<int,int>> threatenedPieces = g.piecesInVision(oppkleur);
-        if (selectedPiece->getNaam()==pion &&
-            abs(clickedPos.first - myPos.first)==2) {     // The pawn just moved 2 squares
-            // EP square is the square behind the pawn
-            if (g.turn) g.enPassantSquare = pair<int,int>(selectionPos.first-1, selectionPos.second);   // if white's turn
-            else if (!g.turn)  g.enPassantSquare = pair<int,int>(selectionPos.first+1, selectionPos.second);    // if black's turn
-            g.epTarget=pair<int,int>(clickedPos.first, clickedPos.second);
-            SchaakStuk* epTargetPiece = g.getPiece(g.epTarget.first, g.epTarget.second);
-
-            // make sure the epTarget will be marked as 'piece threat' (see bottom of func)
-            // check if this pawn landed next to an enemy pawn -> this pawn is threatened because of ep
-            SchaakStuk* lSquare = g.getPiece(g.epTarget.first, g.epTarget.second-1);    // square to the left of epTarget
-            SchaakStuk* rSquare = g.getPiece(g.epTarget.first, g.epTarget.second+1);    // square to the right of epTarget
-
-            if (lSquare != nullptr &&
-            lSquare->getNaam()==pion &&
-            lSquare->getKleur() != epTargetPiece->getKleur())   // enemy pawn to the left -> ep possible
-                 {threatenedPieces.push_back(g.epTarget);}
-            if (rSquare != nullptr &&
-                rSquare->getNaam()==pion &&
-                rSquare->getKleur() != epTargetPiece->getKleur())   // enemy pawn to the right -> ep possible
-            {threatenedPieces.push_back(g.epTarget);}
-
+        if (g.schaakmat(zwart)) {
+            update();
+            return;
         }
-        else {
-            g.enPassantSquare = pair<int, int>(-1, -1); // reset
-
-            // initialise threatenedPieces vector with its default values
-            // this is for the 'piece threat' tile marks to work ()
+//        if (g.playAgainstAI) {
+//            g.aiChoses();
+//            selectedPiece = g.aiSelection;
+//            pieceSelected = true;
+//            selectionPos = g.aiSelection->getPos();
+//            pair<int, int> aiOriginalPos = g.aiSelection->getPos();
+//            vector<pair<int, int>> validAImoves = g.aiSelection->geldige_zetten(g);
+//
+//
+//            g.aiMoves();
+//
+//            afterTheMove(g.aiTargetPos, aiOriginalPos, validAImoves);
+//        }
         }
-        if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==zwart) g.bKingHasMoved=true;
-        else if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit) g.wKingHasMoved=true;
-        // remove tile colors
-        setTileSelect(selectionPos.first, selectionPos.second, false);  // remove selection color of selected piece
-        for (auto p : validMoves) {
-            setTileFocus(p.first, p.second, false);  // remove the 'valid position marks'
-            setTileThreat(p.first, p.second, false); // remove threat marks
-        }
-
-
-
-        g.moveCount++;        // increment movecount
-        g.turn = (g.moveCount%2==0);    // update turn status (true if white's turn, false for black)
-        pieceSelected=false;    // 'reset' this function.
-        // next time this function is called, it will be the opponent's turn
-        if (g.schaak(wit)) cout << "WHITE IN CHECK\n";
-        if (g.schaak(zwart)) cout << "BLACK IN CHECK\n";
-        if (g.schaakmat(wit)) cout << "BLACK WON! (checkmate)\n";
-        if (g.schaakmat(zwart)) cout << "White WON! (checkmate)\n";
-        if (g.pat(zwart)) cout << "TIE! (black in stalemate)\n";
-        if (g.pat(wit)) cout << "TIE! (white in stalemate)\n";
-
-        // Set piece threat marks (pieces that player can capture)
-        // these marks are visible any time there is NO selection going on
-        // the marks shown depend on who's turn it is.
-
-
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                setPieceThreat(i, j, false);    // reset previous marks
-
-                // Set current marks pieces that can be captured by kleur
-                // Note: displayKills() returns whether this box is ticked in GUI
-                if (g.turn && displayKills()) {   // It is white's turn
-                    for (auto p : threatenedPieces) {
-                        setPieceThreat(p.first, p.second, true);
-                    }
-                }
-                else if (!g.turn && displayKills()) {     // it is black's turn
-                    for (auto p : threatenedPieces) {
-                        setPieceThreat(p.first, p.second, true);
-                    }
-                }
-            }
-
-        }
-        // todo: segfault
-        //todo: const schaakstuk??
-//        if (!g.turn) g.aiMoves();
-
+//        // todo: segfault
+//        //todo: const schaakstuk??
+//
         update();
 
-        return;
+}
+
+void SchaakGUI::afterTheMove(pair<int,int> clickedPos, pair<int,int> myPos, vector<pair<int,int>> validMoves) {
+    /* FUNCTIONALITY:
+     * check for promotion or en passant
+     * set tile marking
+     * update undo- and redo-stacks
+     * check for check, mate, stalemate...
+     * update moveCount + 'turn'
+     */
+    g.ud_lastMovingPiece.push_back(selectedPiece);  // purpose = undo func
+    g.ud_prevPos.push_back(selectionPos);   // original pos of last moving piece
+
+    // empty the Redo-Stacks
+    g.rd_prevPos.clear();
+    g.rd_lastMovingPiece.clear();
+
+
+    // check for PROMOTION
+
+    if (selectedPiece->getNaam()==pion &&
+        (clickedPos.first==0 || clickedPos.first==7))
+        g.promote(clickedPos.first, clickedPos.second);
+
+
+
+    // note: at this point, selectedPiece is still the piece that just moved
+
+    // Check for En Passant:
+    // We check if a pawn just moved 2 squares. In that case we set epSquare to the pos behind the pawn
+    // In the following turn of the opponent, any pawn that stands next to pawn that previously moved (2 squares) can capture EP
+
+    zw oppkleur = wit; if (selectedPiece->getKleur()==wit) oppkleur = zwart;
+    vector<pair<int,int>> threatenedPieces = g.piecesInVision(oppkleur);
+    if (selectedPiece->getNaam()==pion &&
+        abs(clickedPos.first - myPos.first)==2) {     // The pawn just moved 2 squares
+        // EP square is the square behind the pawn
+        if (g.turn) g.enPassantSquare = pair<int,int>(selectionPos.first-1, selectionPos.second);   // if white's turn
+        else if (!g.turn)  g.enPassantSquare = pair<int,int>(selectionPos.first+1, selectionPos.second);    // if black's turn
+        g.epTarget=pair<int,int>(clickedPos.first, clickedPos.second);
+        SchaakStuk* epTargetPiece = g.getPiece(g.epTarget.first, g.epTarget.second);
+
+        // make sure the epTarget will be marked as 'piece threat' (see bottom of func)
+        // check if this pawn landed next to an enemy pawn -> this pawn is threatened because of ep
+        SchaakStuk* lSquare = g.getPiece(g.epTarget.first, g.epTarget.second-1);    // square to the left of epTarget
+        SchaakStuk* rSquare = g.getPiece(g.epTarget.first, g.epTarget.second+1);    // square to the right of epTarget
+
+        if (lSquare != nullptr &&
+            lSquare->getNaam()==pion &&
+            lSquare->getKleur() != epTargetPiece->getKleur())   // enemy pawn to the left -> ep possible
+        {threatenedPieces.push_back(g.epTarget);}
+        if (rSquare != nullptr &&
+            rSquare->getNaam()==pion &&
+            rSquare->getKleur() != epTargetPiece->getKleur())   // enemy pawn to the right -> ep possible
+        {threatenedPieces.push_back(g.epTarget);}
+
     }
+    else {
+        g.enPassantSquare = pair<int, int>(-1, -1); // reset
+
+        // initialise threatenedPieces vector with its default values
+        // this is for the 'piece threat' tile marks to work ()
+    }
+    if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==zwart) g.bKingHasMoved=true;
+    else if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit) g.wKingHasMoved=true;
+    // remove tile colors
+    setTileSelect(selectionPos.first, selectionPos.second, false);  // remove selection color of selected piece
+    for (auto p : validMoves) {
+        setTileFocus(p.first, p.second, false);  // remove the 'valid position marks'
+        setTileThreat(p.first, p.second, false); // remove threat marks
+    }
+
+
+
+    g.moveCount++;        // increment movecount
+    g.turn = (g.moveCount%2==0);    // update turn status (true if white's turn, false for black)
+    pieceSelected=false;    // 'reset' this function.
+    // next time this function is called, it will be the opponent's turn
+    if (g.schaak(wit)) cout << "WHITE IN CHECK\n";
+    if (g.schaak(zwart)) cout << "BLACK IN CHECK\n";
+    if (g.schaakmat(wit)) cout << "BLACK WON! (checkmate)\n";
+    if (g.schaakmat(zwart)) cout << "White WON! (checkmate)\n";
+    if (g.pat(zwart)) cout << "TIE! (black in stalemate)\n";
+    if (g.pat(wit)) cout << "TIE! (white in stalemate)\n";
+
+    // Set piece threat marks (pieces that player can capture)
+    // these marks are visible any time there is NO selection going on
+    // the marks shown depend on who's turn it is.
+
+
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            setPieceThreat(i, j, false);    // reset previous marks
+
+            // Set current marks pieces that can be captured by kleur
+            // Note: displayKills() returns whether this box is ticked in GUI
+            if (g.turn && displayKills()) {   // It is white's turn
+                for (auto p : threatenedPieces) {
+                    setPieceThreat(p.first, p.second, true);
+                }
+            }
+            else if (!g.turn && displayKills()) {     // it is black's turn
+                for (auto p : threatenedPieces) {
+                    setPieceThreat(p.first, p.second, true);
+                }
+            }
+        }
+
+}
 }
 
 
@@ -310,32 +327,86 @@ void SchaakGUI::open() {
 
 
 void SchaakGUI::undo() {
-    message("UNDO");
+//    if (g.playAgainstAI) {  //   = go two moves back
+//        message("UNDO");
+//        if (!g.turn) return;    // should always be white's turn
+//
+//        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
+//
+//        pair<int,int> originalPos = g.ud_prevPos.back();    // target pos of this undo
+//        SchaakStuk* s = g.ud_lastMovingPiece.back();
+//        pair<int,int> myPos(s->getPos());
+//
+//        // update Redo-stacks
+//        g.rd_lastMovingPiece.push_back(s);
+//        g.rd_prevPos.push_back(myPos);
+//
+//        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
+//        s->setPos(originalPos);
+//        if (g.ud_capturedPiece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
+//        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
+//        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
+//// pop the Undo-Stacks
+//        // todo: make this 1 stack?
+//        g.ud_capturedPiece.pop_back();
+//        g.ud_prevPos.pop_back();
+//        g.ud_lastMovingPiece.pop_back();
+//
+//        if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
+//        g.moveCount--;  // decrement movecount
+//        //  'SECOND' UNDO (moving the white piece back)
+//        originalPos = g.ud_prevPos.back();    // target pos of this undo
+//        s = g.ud_lastMovingPiece.back();
+//        myPos = pair<int,int>(s->getPos());
+//
+//        // update Redo-stacks
+//        g.rd_lastMovingPiece.push_back(s);
+//        g.rd_prevPos.push_back(myPos);
+//
+//        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
+//        s->setPos(originalPos);
+//        if (g.ud_capturedPiece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
+//        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
+//        update();
+//
+//        // pop the Undo-Stacks
+//        // todo: make this 1 stack?
+//        g.ud_capturedPiece.pop_back();
+//        g.ud_prevPos.pop_back();
+//        g.ud_lastMovingPiece.pop_back();
+//
+//        if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
+//        g.moveCount--;  // decrement movecount
+//    }
+    if (!g.playAgainstAI) {  // not playing AI = go 1 move back (so black can also move again)
+        message("UNDO");
 
-    if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
+        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
 
-    pair<int,int> originalPos = g.ud_prevPos.back();    // target pos of this undo
-    SchaakStuk* s = g.ud_lastMovingPiece.back();
-    pair<int,int> myPos(s->getPos());
+        pair<int, int> originalPos = g.ud_prevPos.back();    // target pos of this undo
+        SchaakStuk *s = g.ud_lastMovingPiece.back();
+        pair<int, int> myPos(s->getPos());
 
-    // update Redo-stacks
-    g.rd_lastMovingPiece.push_back(s);
-    g.rd_prevPos.push_back(myPos);
+        // update Redo-stacks
+        g.rd_lastMovingPiece.push_back(s);
+        g.rd_prevPos.push_back(myPos);
 
-    g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
-    s->setPos(originalPos);
-    if (g.ud_capturedPiece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
-    else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
-    update();
+        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
+        s->setPos(originalPos);
+        if (g.ud_capturedPiece.back() != nullptr)
+            g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
+        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
+        update();
 
-    // pop the Undo-Stacks
-    // todo: make this 1 stack?
-    g.ud_capturedPiece.pop_back();
-    g.ud_prevPos.pop_back();
-    g.ud_lastMovingPiece.pop_back();
+        // pop the Undo-Stacks
+        // todo: make this 1 stack?
+        g.ud_capturedPiece.pop_back();
+        g.ud_prevPos.pop_back();
+        g.ud_lastMovingPiece.pop_back();
 
-    if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
-    g.moveCount--;  // decrement movecount
+        if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
+        g.moveCount--;  // decrement movecount
+    }
 }
 
 void SchaakGUI::redo() {

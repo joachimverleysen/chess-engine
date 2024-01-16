@@ -19,6 +19,8 @@ public:
     Game();
     ~Game();
 
+    bool playAgainstAI = false;
+
     int moveCount=0;
     bool turn=(moveCount%2==0);     // true for White, false for Black
     bool move(SchaakStuk* s,int r, int k); // Verplaats stuk s naar rij r en kolom k
@@ -37,6 +39,10 @@ public:
     vector<pair<int, int>> kingControls(zw kleur);  // squares that the king controls
     bool wKingHasMoved=false;   // white king has moved?
     bool bKingHasMoved=false;   // black king has moved?
+
+    // AI specific vars:
+    SchaakStuk* aiSelection = nullptr;
+    pair<int,int> aiTargetPos = pair<int,int>(-1,-1);
 
     // UNDO STACKS (work synchronously)
     vector<SchaakStuk*> ud_lastMovingPiece;   // Last piece that moved
@@ -68,6 +74,9 @@ public:
     // purpose of this var: make sure that a fake move doesn't actually capture pieces.
     // the tempPiece is the piece that is captured within a fake move, and will be restored in the 'undo'
 
+    bool aiFakeMoveMade=false;
+    SchaakStuk* tempPiece_2 = nullptr;  // temp piece used in the aiFakeMoveMade
+    // We use a separate var because of overwriting issues
 
     // Hier zet jij jouw datastructuur neer om het bord te bewaren ...
 
@@ -86,6 +95,10 @@ public:
     void undo();
 
     void aiMoves();
+
+    void aiChoses();
+
+    bool aiFakeMove(SchaakStuk *s, int r, int k);
 };
 
 #endif //SCHAKEN_GAME_H
