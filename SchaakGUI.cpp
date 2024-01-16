@@ -156,8 +156,6 @@ void SchaakGUI::clicked(int r, int k) {
 //            afterTheMove(g.aiTargetPos, aiOriginalPos, validAImoves);
 //        }
         }
-//        // todo: segfault
-//        //todo: const schaakstuk??
 //
         update();
 
@@ -347,7 +345,6 @@ void SchaakGUI::undo() {
 //        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
 //        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
 //// pop the Undo-Stacks
-//        // todo: make this 1 stack?
 //        g.ud_capturedPiece.pop_back();
 //        g.ud_prevPos.pop_back();
 //        g.ud_lastMovingPiece.pop_back();
@@ -370,7 +367,6 @@ void SchaakGUI::undo() {
 //        update();
 //
 //        // pop the Undo-Stacks
-//        // todo: make this 1 stack?
 //        g.ud_capturedPiece.pop_back();
 //        g.ud_prevPos.pop_back();
 //        g.ud_lastMovingPiece.pop_back();
@@ -399,7 +395,6 @@ void SchaakGUI::undo() {
         update();
 
         // pop the Undo-Stacks
-        // todo: make this 1 stack?
         g.ud_capturedPiece.pop_back();
         g.ud_prevPos.pop_back();
         g.ud_lastMovingPiece.pop_back();
