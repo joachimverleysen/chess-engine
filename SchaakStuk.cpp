@@ -9,8 +9,6 @@
 #include <algorithm>
 using std::cout; using std::vector; using std::pair; using std::find;
 
-
-
 // Schaakstuk methods
 pair<int, int> SchaakStuk::getPos() const {
     // The object on which this method is called may not be a nullptr !!!
@@ -47,8 +45,6 @@ vector<pair<int, int>> SchaakStuk::geldige_zetten(Game &game) {
 
     return result;
 }
-
-//todo: set piece threat
 
 
 bool SchaakStuk::testSelfCheck(Game &g, int r, int k) {
@@ -96,6 +92,8 @@ pieceName SchaakStuk::getNaam() const {
 
 
 vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
+    // ignores check, checkmate...
+
     vector<pair<int, int>> result;
 
     pair<int,int> myPos(getPos());      // Initialize var with position
@@ -161,8 +159,6 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
 vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van ChatGPT
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
-//todo: deze methodes kunnen uitleggen!
-//todo: emplace back ipv push back
 
 
     // The bishop moves diagonally.
@@ -303,8 +299,6 @@ vector<pair<int, int>> Koning::mogelijke_zetten(Game &game) {       // met hulp 
     pair<int, int> myPos(getPos());
 
     // check for castle options:
-    // todo: fix segfault
-
 
     // Aangrenzende posities
     for (int i = -1; i <= 1; i++) {

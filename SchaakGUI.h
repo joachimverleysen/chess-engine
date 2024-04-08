@@ -26,7 +26,6 @@ public:
 private:
     Game g;
 
-
     void clicked(int x, int y) override;
     void newGame() override;
     void open() override;

@@ -36,7 +36,7 @@ public:
     void setPiece(int r, int k, SchaakStuk* s);
     vector<SchaakStuk*> getActivePieces() const;
     bool fakeMove(SchaakStuk *s, int r, int k);
-    vector<pair<int, int>> kingControls(zw kleur);  // squares that the king controls
+    vector<pair<int, int>> kingControls(zw kleur) const;  // squares that the king controls
     bool wKingHasMoved=false;   // white king has moved?
     bool bKingHasMoved=false;   // black king has moved?
 

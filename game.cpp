@@ -15,6 +15,7 @@ Game::Game() {
 
 }
 
+
 Game::~Game() {}
 
 // Zet het bord klaar; voeg de stukken op de jusite plaats toe
@@ -547,10 +548,9 @@ bool Game::kCastleValid(zw kleur) {
 }
 
 void Game::promote(int r, int k) {
-    // for conveniance, promotion will always be a queen.
+    // for convenience, promotion will always be a queen.
     zw color = getPiece(r, k)->getKleur();
     pair<int,int> newPos(r, k);
-    // todo: memleak?
     Koningin* q = new Koningin(color, newPos);
     setPiece(r, k, q);
 }
@@ -565,7 +565,7 @@ bool Game::qCastleValid(zw kleur) {
     if (kleur==zwart && bKingHasMoved) return false;
     if (kleur==wit && wKingHasMoved) return false;
     if (schaak(kleur)) return false;    // can't castle when in check
-    pair<int,int> kingPos = findKing(kleur);    //todo: does this func work???
+    pair<int,int> kingPos = findKing(kleur);
 
     // Check whether squares between king and rook are empty (queenside!)
     for (int i=1; i<=3; i++) {  // 3 squares to check between king and rook
@@ -583,7 +583,7 @@ bool Game::qCastleValid(zw kleur) {
     return true;
 }
 
-vector<pair<int,int>> Game::kingControls(zw kleur) {
+vector<pair<int,int>> Game::kingControls(zw kleur) const {
     // Hulpfunction that returns the positions that the king of color kleur controls
     // We more or less copy the mogelijke_zetten function, but this avoids circular dependency
     vector<pair<int, int>> result;
@@ -651,7 +651,7 @@ vector<pair<int, int>> Game::controlledSquares(zw kleur) {  // returns vector wi
 
 vector<pair<int, int>> Game::piecesInVision(zw kleur) {
     vector<pair<int,int>> result;
-    // returns vector of the pieces that can be taken any piece of 'kleur'
+    // returns vector of the pieces that can be taken by any piece of 'kleur'
     // Loop through controlled_squares en check for every position if there is a piece on that square
 
     for (auto piece : getActivePieces()) {

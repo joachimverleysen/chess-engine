@@ -10,9 +10,6 @@
 #include <string>
 using std::pair; using std::vector; using std::string;
 
-
-
-
 class Game;
 
 enum zw{zwart,wit};

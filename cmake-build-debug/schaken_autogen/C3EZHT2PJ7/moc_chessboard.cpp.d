@@ -1,5 +1,5 @@
-/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/C3EZHT2PJ7/moc_chessboard.cpp: /home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/guicode/chessboard.h \
-  /home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/moc_predefs.h \
+/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/C3EZHT2PJ7/moc_chessboard.cpp: /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/guicode/chessboard.h \
+  /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/moc_predefs.h \
   /home/joachimverleysen/QT/5.15.2/gcc_64/include/QtCore/qalgorithms.h \
   /home/joachimverleysen/QT/5.15.2/gcc_64/include/QtCore/qarraydata.h \
   /home/joachimverleysen/QT/5.15.2/gcc_64/include/QtCore/qatomic.h \

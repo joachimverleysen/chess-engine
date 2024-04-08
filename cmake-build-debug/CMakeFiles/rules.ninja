@@ -42,7 +42,7 @@ rule CUSTOM_COMMAND
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /snap/clion/261/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken -B/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/cmake-build-debug
+  command = /snap/clion/265/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken -B/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 
@@ -51,7 +51,7 @@ rule RERUN_CMAKE
 # Rule for cleaning additional files.
 
 rule CLEAN_ADDITIONAL
-  command = /snap/clion/261/bin/cmake/linux/x64/bin/cmake -DCONFIG=$CONFIG -P CMakeFiles/clean_additional.cmake
+  command = /snap/clion/265/bin/cmake/linux/x64/bin/cmake -DCONFIG=$CONFIG -P CMakeFiles/clean_additional.cmake
   description = Cleaning additional files...
 
 
@@ -59,7 +59,7 @@ rule CLEAN_ADDITIONAL
 # Rule for cleaning all built files.
 
 rule CLEAN
-  command = /snap/clion/261/bin/ninja/linux/x64/ninja $FILE_ARG -t clean $TARGETS
+  command = /snap/clion/265/bin/ninja/linux/x64/ninja $FILE_ARG -t clean $TARGETS
   description = Cleaning all built files...
 
 
@@ -67,6 +67,6 @@ rule CLEAN
 # Rule for printing all primary targets available.
 
 rule HELP
-  command = /snap/clion/261/bin/ninja/linux/x64/ninja -t targets
+  command = /snap/clion/265/bin/ninja/linux/x64/ninja -t targets
   description = All primary targets available:
 
