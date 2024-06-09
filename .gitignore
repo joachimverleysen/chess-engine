@@ -3,6 +3,7 @@
 
 # Project specific
 *.json
+*.zip
 
 ### C++ ###
 # Prerequisites

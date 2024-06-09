@@ -90,7 +90,10 @@ pieceName SchaakStuk::getNaam() const {
     return naam;
 }
 
-
+bool inRange(pair<int, int> &pos) {
+    return pos.first>=0 && pos.first<8 &&
+    pos.second >=0 && pos.second <8;
+}
 vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
     // ignores check, checkmate...
 
@@ -135,13 +138,13 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
 
 
     // Check if the diagonally left square has an opponent's piece
-    if (game.getPiece(diagL.first, diagL.second) != nullptr &&
+    if (inRange(diagL) && game.getPiece(diagL.first, diagL.second) != nullptr &&
             game.getPiece(diagL.first, diagL.second)->getKleur() != this->getKleur()) {
         result.push_back(diagL);
     }
 
     // Check if the diagonally right square has an opponent's piece
-    if (game.getPiece(diagR.first, diagR.second) != nullptr &&
+    if (inRange(diagR) && game.getPiece(diagR.first, diagR.second) != nullptr &&
             game.getPiece(diagR.first, diagR.second)->getKleur() != this->getKleur()) {
         result.push_back(diagR);
     }
