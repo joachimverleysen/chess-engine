@@ -93,6 +93,8 @@ public:
 
     void promote(int r, int k);
 
+    void undo();
+
     void aiMoves();
 
     void aiChoses();
