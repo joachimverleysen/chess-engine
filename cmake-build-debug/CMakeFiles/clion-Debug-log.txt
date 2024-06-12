@@ -1,4 +1,4 @@
-/snap/clion/265/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/265/bin/ninja/linux/x64/ninja -G Ninja -S /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken -B /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug
+/home/joachimverleysen/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/home/joachimverleysen/.local/share/JetBrains/Toolbox/apps/clion/bin/ninja/linux/x64/ninja -G Ninja -S /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken -B /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug
 -- The C compiler identification is GNU 11.4.0
 -- The CXX compiler identification is GNU 11.4.0
 -- Detecting C compiler ABI info
@@ -11,6 +11,6 @@
 -- Check for working CXX compiler: /usr/bin/c++ - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Configuring done (0.8s)
+-- Configuring done (0.9s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug

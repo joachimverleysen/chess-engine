@@ -65,6 +65,25 @@ void Game::setStartBord() {
 
 }
 
+SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* king) {
+    auto kingPos = king->getPos();
+    bool kingside = true;   // is it a kingside castle? (if not -> queenside)
+    if (king_target_pos.second < kingPos.second)  kingside=false;
+    // note: castling should already be valid, so we are not checking again
+
+    // move rook:
+    SchaakStuk* rook = nullptr; // initialise local var: = the castling rook
+    for (auto p : getActivePieces()) {
+        pair<int,int> q = p->getPos();
+        if (p->getKleur()!=king->getKleur() || p->getNaam()!=toren) continue;
+        // if it is a kingside castle, we are looking for the rook to the right of the king and vice versa
+        if (kingside && q.second<kingPos.second) continue; // wrong rook
+        if (!kingside && q.second>kingPos.second) continue; // wrong rook
+        rook = p;
+    }
+    return rook;
+}
+
 // Verplaats stuk s naar positie (r,k)
 // Als deze move niet mogelijk is, wordt false teruggegeven
 // en verandert er niets aan het schaakbord.
@@ -90,15 +109,25 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         // reset en passant vars
         epTarget = pair<int,int>(-1,-1);    // default value
         enPassantSquare = pair<int,int>(-1,-1);
+
+        pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr, pair<int, int>(-1, -1));
+        castling_rook_stack.push_back(castling_rook);
         return true;
     }
     // check if the move is castling:
     if (s->getNaam()==koning &&
-    abs(myPos.second-k)>1) {    // check if distance between king and selectedPos is more then 1 ->castle
+    abs(myPos.second-k)>1) {
+        auto castling_rook = getCastlingRook(targetPos, s);
+        pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook,
+                                                        castling_rook->getPos());
+        castling_rook_stack.push_back(castling_rook_pair);// check if distance between king and selectedPos is more then 1 ->castle
         if (k>myPos.second && kCastleValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
         else if (k<myPos.second && qCastleValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
+
         return true;
     }
+    pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr,pair<int, int>(-1, -1));
+    castling_rook_stack.push_back(castling_rook);
 
     // Controleer of de opgegeven positie binnen het schaakbord ligt
     if (r < 0 || r > 7 || k < 0 || k > 7 ) {
@@ -322,6 +351,8 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
         rook = p;
     }
     pair<int,int> rookPos = rook->getPos();
+    castling_rook = {rook, rookPos};
+
     // Verplaats het schaakstuk naar het nieuwe veld
     pair<int,int> newPos(-1,-1); // initilise local var
 

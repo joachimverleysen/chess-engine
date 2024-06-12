@@ -40,6 +40,8 @@ public:
     bool wKingHasMoved=false;   // white king has moved?
     bool bKingHasMoved=false;   // black king has moved?
 
+    pair<SchaakStuk*, pair<int, int>> castling_rook;        // + the original posistion of the rook
+
     // AI specific vars:
     SchaakStuk* aiSelection = nullptr;
     pair<int,int> aiTargetPos = pair<int,int>(-1,-1);
@@ -52,6 +54,8 @@ public:
     vector<SchaakStuk*> ud_capturedPiece; // piece that was captured in previous move (else nullptr)
     // when a move does not involve a capture, a nullptr will be pushed on the stack
     // when it does involve a capture, the captured piece will be pushed on the stack
+
+    vector<pair<SchaakStuk*, pair<int, int>>> castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
 //todo: const correctness
     // REDO STACKS (work synchronously)
     // when an undo occurs, the previous state is pushed on the stacks
@@ -62,6 +66,8 @@ public:
     // when it does involve a capture, the captured piece will be pushed on the stack
     pair<int,int> enPassantSquare = pair<int,int>(-1,-1);   // initialise with invalid pos
     pair<int,int> epTarget = pair<int,int>(-1,-1); // The pawn that is a target for en passant
+    vector<pair<SchaakStuk*, pair<int, int>>> rd_castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
+
 
     // squares that a pawn controls
 
@@ -99,6 +105,8 @@ public:
     void aiChoses();
 
     bool aiFakeMove(SchaakStuk *s, int r, int k);
+
+    SchaakStuk *getCastlingRook(pair<int, int> king_target_pos, SchaakStuk *king);
 };
 
 #endif //SCHAKEN_GAME_H
