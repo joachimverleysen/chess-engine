@@ -35,7 +35,6 @@ struct GameStack {
 };
 
 class Game {
-// variabelen om de status van het spel/bord te bewaren
 
 public:
     SchaakStuk* schaakbord[8][8];
@@ -49,55 +48,44 @@ public:
 
     zw colorToMove() const;
     bool move(SchaakStuk* s,int r, int k);
-    bool validMove(SchaakStuk* piece, pair<int, int> targetPosition);
 
     pair<int,int> findKing(zw kleur) const;
     bool schaak(zw kleur);
     bool schaakmat(zw kleur);
     bool pat(zw kleur);
     void setStartBord();
-    vector<pair<int,int>> controlledSquares(zw kleur); // returns vector with positions that 'kleur' controls
+    vector<pair<int,int>> controlledSquares(zw kleur);
 
     SchaakStuk* getPiece(int r, int k) const;
     void setPiece(int r, int k, SchaakStuk* s);
     vector<SchaakStuk*> getActivePieces() const;
     bool fakeMove(SchaakStuk *s, int r, int k);
-    vector<pair<int, int>> kingControls(zw kleur) const;  // squares that the king controls
-    bool whiteKingMoved=false;   // white king has moved?
-    bool blackKingMoved=false;   // black king has moved?
+    vector<pair<int, int>> kingControls(zw kleur) const;
+    bool whiteKingMoved=false;
+    bool blackKingMoved=false;
 
-    pair<SchaakStuk*, pair<int, int>> castling_rook;        // + the original posistion of the rook
+    pair<SchaakStuk*, pair<int, int>> castling_rook;
 
-    // AI specific vars:
+
     SchaakStuk* aiSelection = nullptr;
     pair<int,int> aiTargetPos = pair<int,int>(-1,-1);
 
     GameStack undoStack;
     GameStack redoStack;
 
-    vector<pair<SchaakStuk*, pair<int, int>>> castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
+    vector<pair<SchaakStuk*, pair<int, int>>> castling_rook_stack;
 
-    pair<int,int> enPassantSquare = pair<int,int>(-1,-1);   // initialise with invalid pos
-    pair<int,int> enPassantTargetPos = pair<int,int>(-1, -1); // The pawn that is a target for en passant
-    vector<pair<SchaakStuk*, pair<int, int>>> rd_castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
+    pair<int,int> enPassantSquare = pair<int,int>(-1,-1);
+    pair<int,int> enPassantTargetPos = pair<int,int>(-1, -1);
+    vector<pair<SchaakStuk*, pair<int, int>>> rd_castling_rook_stack;
 
-
-    // squares that a pawn controls
-
-
-    bool fakeMoveMade=false; // Indicates if a fake move has been made. This means the fake move must be made undone!
-    // the reason for the var above is for the fake move (undo?) to work properly -> see fakeMove()
-    // purpose of fake moves: to test if the move results in a self-check (illegal)
+    bool fakeMoveMade=false;
 
     SchaakStuk* tempCapturedPiece=nullptr;
-    // purpose of this var: make sure that a fake move doesn't actually capture pieces.
-    // the tempCapturedPiece is the piece that is captured within a fake move, and will be restored in the 'undo'
 
     bool aiFakeMoveMade=false;
-    SchaakStuk* tempPiece_2 = nullptr;  // temp piece used in the aiFakeMoveMade
-    // We use a separate var because of overwriting issues
+    SchaakStuk* tempPiece_2 = nullptr;
 
-    // Hier zet jij jouw datastructuur neer om het bord te bewaren ...
 
     bool kingSideCastleIsValid(zw kleur);
 
@@ -108,10 +96,6 @@ public:
     vector<pair<int, int>> piecesInVision(zw kleur);
 
     void promote(int r, int k);
-
-    void aiMoves();
-
-    void aiChoses();
 
     bool aiFakeMove(SchaakStuk *s, int r, int k);
 

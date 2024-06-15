@@ -200,14 +200,12 @@ void SchaakGUI::undo() {
         SchaakStuk *piece = g.undoStack.last_piece.back();
         pair<int, int> my_position(piece->getPos());
 
-        // update Redo-stacks
-        g.redoStack.last_piece.push_back(piece);
-        g.redoStack.previous_position.push_back(my_position);
+        auto captured = g.undoStack.captured_piece.back();
 
         g.setPiece(previous_position.first, previous_position.second, piece);   // move last moving piece back
         piece->setPos(previous_position);
         if (!g.undoStack.captured_piece.empty() &&g.undoStack.captured_piece.back() != nullptr)
-            g.setPiece(my_position.first, my_position.second, g.undoStack.captured_piece.back());   // restore captured piece
+            g.setPiece(my_position.first, my_position.second, captured);   // restore captured piece
         else g.setPiece(my_position.first, my_position.second, nullptr);  // clear square again if there was no capture
         update();
 
@@ -232,9 +230,8 @@ void SchaakGUI::undo() {
 
 
         // pop the Undo-Stacks
-        g.undoStack.captured_piece.pop_back();
-        g.undoStack.previous_position.pop_back();
-        g.undoStack.last_piece.pop_back();
+        g.undoStack.pop();
+        g.redoStack.push(piece, captured, my_position);
 //        g.castling_rook_stack.pop_back();
 
         g.moveCount--;  // decrement movecount
@@ -251,8 +248,8 @@ void SchaakGUI::redo() {
     pair<int,int> previous_position = g.redoStack.previous_position.back();    // target pos of this redo
     SchaakStuk* piece = g.redoStack.last_piece.back();
     pair<int,int> my_position(piece->getPos());
-    g.undoStack.captured_piece.push_back(g.getPiece(previous_position.first, previous_position.second));
 
+    auto captured = g.getPiece(previous_position.first, previous_position.second);
     g.setPiece(previous_position.first, previous_position.second, piece);
     piece->setPos(previous_position);
     g.setPiece(my_position.first, my_position.second, nullptr);  // clear original square
@@ -272,11 +269,11 @@ void SchaakGUI::redo() {
 
     }*/
 
-    g.redoStack.previous_position.pop_back();
-    g.redoStack.last_piece.pop_back();
-//    g.rd_castling_rook_stack.pop_back();
-    g.undoStack.previous_position.push_back(my_position);
-    g.undoStack.last_piece.push_back(piece);
+
+
+    g.redoStack.pop();
+    g.undoStack.push(piece, captured, my_position);
+
 
     g.moveCount++; // increment movecount
 }
