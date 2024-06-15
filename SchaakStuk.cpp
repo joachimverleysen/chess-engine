@@ -17,7 +17,7 @@ pair<int, int> SchaakStuk::getPos() const {
 
 // checks for every 'mogelijke zet' if the move is also legal
 // (that means: not putting yourself in check or ignoring check)
-vector<pair<int, int>> SchaakStuk::geldige_zetten(Game &game) {
+vector<pair<int, int>> SchaakStuk::validMoves(Game &game) {
     vector<pair<int,int>> result;
     // We will loop through every possible move and execute the move (without updating GUI)
     // We will check if the move results in the moving player being in check

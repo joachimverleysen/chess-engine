@@ -48,7 +48,7 @@ public:
 
     bool testSelfCheck(Game &g, int r, int k);
 
-    vector<pair<int, int>> geldige_zetten(Game &game);
+    vector<pair<int, int>> validMoves(Game &game);
 
 
 private:

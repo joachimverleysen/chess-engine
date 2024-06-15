@@ -184,7 +184,7 @@ void Game::aiChoses() { // func where ai choses a piece + position to move
         if (found) break;
         if (p->getKleur()==wit) continue;
         myPos = p->getPos();
-        for (auto z : p->geldige_zetten(*this)) {
+        for (auto z : p->validMoves(*this)) {
             if (found) break;
             aiFakeMove(p, z.first, z.second);  // execute the FAKE MOVE (GUI won't be updated)
 
@@ -211,7 +211,7 @@ void Game::aiChoses() { // func where ai choses a piece + position to move
             if (found) break;
             if (p->getKleur()==wit) continue;
             myPos = p->getPos();
-            for (auto z: p->geldige_zetten(*this)) {
+            for (auto z: p->validMoves(*this)) {
                 if (found) break;
                 aiFakeMove(p, z.first, z.second);  // execute the FAKE MOVE (GUI won't be updated)
                 aiFakeMoveMade = true;
@@ -238,7 +238,7 @@ void Game::aiChoses() { // func where ai choses a piece + position to move
             if (found) break;
             if (p->getKleur()==wit) continue;
             myPos = p->getPos();
-            for (auto z : p->geldige_zetten(*this)) {
+            for (auto z : p->validMoves(*this)) {
                 if (found) break;
                 if (getPiece(z.first, z.second) != nullptr) {  // move involves a capture
                     aiTargetPos = z; found = true;
@@ -257,7 +257,7 @@ void Game::aiChoses() { // func where ai choses a piece + position to move
             if (found) break;
             if (p->getKleur()==wit) continue;
             myPos = p->getPos();
-            for (auto z : p->geldige_zetten(*this)) {
+            for (auto z : p->validMoves(*this)) {
                 if (found) break;
                 aiTargetPos = z;
                 found = true;    // Take the first move available
@@ -305,7 +305,7 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
 
         // Controleer of de opgegeven positie een geldige zet is voor het schaakstuk
     SchaakStuk* king = getPiece(kingPos.first, kingPos.second); // put king piece in local var
-    vector<pair<int, int>> zetten = king->geldige_zetten(*this);
+    vector<pair<int, int>> zetten = king->validMoves(*this);
     auto it = find(zetten.begin(), zetten.end(), pos);
 
     // move the king
@@ -477,7 +477,7 @@ bool Game::schaakmat(zw kleur) {
     // check if kleur has any legal moves
     for (auto p: getActivePieces()) {  // loop through all active pieces
         if (p->getKleur() != kleur) continue;
-        vector<pair<int,int>> g = p->geldige_zetten(*this); // legal moves of piece
+        vector<pair<int,int>> g = p->validMoves(*this); // legal moves of piece
         legalMoves.insert(legalMoves.end(), g.begin(), g.end()); // insert moves to the vector
     }
     if (!legalMoves.empty()) return false;
@@ -496,7 +496,7 @@ bool Game::pat(zw kleur) {
     // check if kleur has any legal moves
     for (auto p: getActivePieces()) {  // loop through all active pieces
         if (p->getKleur() != kleur) continue;
-        vector<pair<int,int>> g = p->geldige_zetten(*this); // legal moves of piece
+        vector<pair<int,int>> g = p->validMoves(*this); // legal moves of piece
         legalMoves.insert(legalMoves.end(), g.begin(), g.end()); // insert moves to the vector
     }
     if (!legalMoves.empty()) return false;
@@ -655,8 +655,8 @@ vector<pair<int, int>> Game::controlledSquares(zw kleur) {  // returns vector wi
         else if (p->getNaam()==koning) { // We need to do this separately to avoid segfault (circular dependency?)
             vector<pair<int,int>> v = kingControls(kleur);
             result.insert(result.end(), v.begin(), v.end()); // add all the piece's attacking squares to result
-        } else {  // Not a king, not a pawn -> can safely use geldige_zetten()
-            vector<pair<int,int>> v = p->geldige_zetten(*this);
+        } else {  // Not a king, not a pawn -> can safely use validMoves()
+            vector<pair<int,int>> v = p->validMoves(*this);
             result.insert(result.end(), v.begin(), v.end()); // add all the piece's attacking squares to result
        }
     }
@@ -670,7 +670,7 @@ vector<pair<int, int>> Game::piecesInVision(zw kleur) {
 
     for (auto piece : getActivePieces()) {
         if (piece->getKleur()!=kleur) continue;
-        for (auto pos : piece->geldige_zetten(*this)) {
+        for (auto pos : piece->validMoves(*this)) {
             if (getPiece(pos.first, pos.second) == nullptr) continue;   // empty square
             result.push_back(pos);  // enemy piece
         }

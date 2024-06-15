@@ -50,6 +50,8 @@ private:
     bool displayThreats();
 */
     void afterTheMove(pair<int,int> clickedPos, pair<int,int> myPos, vector<pair<int,int>> validMoves);
+
+    void updateMarking();
 };
 
 #endif //SCHAKEN_SCHAAKGUI_H

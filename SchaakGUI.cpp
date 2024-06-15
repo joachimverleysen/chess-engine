@@ -37,45 +37,40 @@ for (int i=0; i<8; i++) {
 }
 
 
-// Deze functie wordt opgeroepen telkens er op het schaakbord
-// geklikt wordt. x,y geeft de positie aan waar er geklikt
-// werd; r is de 0-based rij, k de 0-based kolom
+void SchaakGUI::updateMarking() {
+    if (selectedPiece == nullptr) return;
+    setTileSelect(selectedPiece->getPos().first, selectedPiece->getPos().second,true);
+    vector<pair<int, int>> validMoves = selectedPiece->validMoves(g);
+
+    // 'valid position' + 'danger zone' marks
+    zw color = zwart;
+    if (selectedPiece->getKleur()==zwart) color=wit;
+    vector<pair<int,int>> dangerZone = g.controlledSquares(color);
+    for (auto p : validMoves) {
+        if (displayMoves()) setTileFocus(p.first, p.second, true);
+        setPieceThreat(p.first, p.second, false);
+        auto it = std::find(dangerZone.begin(), dangerZone.end(), p);
+        if (it != dangerZone.end() && displayThreats()) setTileThreat(p.first, p.second, true);
+
+    }
+}
+
 void SchaakGUI::clicked(int r, int k) {
     if (g.schaakmat(wit) || g.schaakmat(zwart) || g.pat(wit) || g.pat(zwart)) return;
 
 
     pair<int, int> clickedPos(r, k);
-    SchaakStuk *clickedItem = g.getPiece(r, k);     // can be a piece or a nullptr (empty square)
+    SchaakStuk *clickedItem = g.getPiece(r, k);
 
     if (!pieceSelected) {
         if (clickedItem != nullptr) {
-            if (clickedItem->getKleur() == wit && g.turn ||         // White's turn and white piece selected
-                clickedItem->getKleur() == zwart && !g.turn) {   // Black's turn and black piece selected
-                pieceSelected = true;
+            if (clickedItem->getKleur() == wit && g.turn ||
+                    clickedItem->getKleur() == zwart && !g.turn) {
+                pieceSelected=true;
                 selectedPiece = clickedItem;
                 selectionPos.first = r;
                 selectionPos.second = k;
-
-                // SET TILE/PIECE MARKING
-                // selection mark
-                setTileSelect(r,k,true);    // mark selected piece
-                vector<pair<int, int>> validMoves = selectedPiece->geldige_zetten(g);
-
-                // 'valid position' + 'danger zone' marks
-                zw kl = zwart;
-                if (selectedPiece->getKleur()==zwart) kl=wit;   // make sure "kl" (kleur) is the enemy's color
-                vector<pair<int,int>> dangerZone = g.controlledSquares(kl);  // squares that the enemy controls
-                for (auto p : validMoves) {
-                    if (displayMoves()) setTileFocus(p.first, p.second, true);  // mark each valid position
-                    setPieceThreat(p.first, p.second, false); // remove these marks during a selection
-                    auto it = std::find(dangerZone.begin(), dangerZone.end(), p);
-                    if (it != dangerZone.end() && displayThreats()) setTileThreat(p.first, p.second, true);     // mark this square as danger zone
-
-                    // note: displayThreats() returns whether this box is ticked in GUI
-                    // same for displayMoves, displayKills
-                }
-
-
+                updateMarking();
             }
         }
 
@@ -88,7 +83,7 @@ void SchaakGUI::clicked(int r, int k) {
     pair<int,int> myPos = selectedPiece->getPos(); // original position of the selected piece
     if (selectionPos == clickedPos) {     // The current selection is clicked again -> unselect
         pieceSelected = false;
-        vector<pair<int,int>> validMoves = selectedPiece->geldige_zetten(g);
+        vector<pair<int,int>> validMoves = selectedPiece->validMoves(g);
         setTileSelect(r,k,false);
         for (auto p : validMoves) {
             setTileFocus(p.first, p.second, false);  // remove the 'valid position marks'
@@ -122,7 +117,7 @@ void SchaakGUI::clicked(int r, int k) {
         return;
         // No need to reset selectionPos
     }
-    vector<pair<int, int>> validMoves = selectedPiece->geldige_zetten(g);
+    vector<pair<int, int>> validMoves = selectedPiece->validMoves(g);
     // set tile focus
 
     // check if the clickedPos is a valid move
@@ -141,7 +136,7 @@ void SchaakGUI::clicked(int r, int k) {
 //            pieceSelected = true;
 //            selectionPos = g.aiSelection->getPos();
 //            pair<int, int> aiOriginalPos = g.aiSelection->getPos();
-//            vector<pair<int, int>> validAImoves = g.aiSelection->geldige_zetten(g);
+//            vector<pair<int, int>> validAImoves = g.aiSelection->validMoves(g);
 //
 //
 //            g.aiMoves();
