@@ -18,22 +18,17 @@ SchaakGUI::SchaakGUI():ChessWindow(nullptr) {
     update();
 }
 
-// Update de inhoud van de grafische weergave van het schaakbord (scene)
-// en maak het consistent met de game state in variabele g.
 void SchaakGUI::update() {
     clearBoard();
 
-//     Loop through board matrix and call setItem() for every piece
-for (int i=0; i<8; i++) {
-    for (int j=0; j<8; j++) {
-        if (g.schaakbord[i][j] != nullptr) {
-            setItem(i, j, g.getPiece(i, j));
-        }
-        else if (g.schaakbord[i][j] == nullptr) {
-//            setItem(i, j, nullptr);
+    for (int i=0; i<8; i++) {
+        for (int j=0; j<8; j++) {
+            if (g.schaakbord[i][j] != nullptr) {
+                setItem(i, j, g.getPiece(i, j));
+            }
+
         }
     }
-}
 }
 
 void SchaakGUI::doPieceThreatMarking() {
@@ -85,7 +80,7 @@ void SchaakGUI::clicked(int r, int k) {
     if (!pieceSelected && clickedItem->getKleur() != g.colorToMove())
         return;
 
-    if (!pieceSelected) {
+    else if (!pieceSelected) {
         pieceSelected=true;
         selectedPiece = clickedItem;
         selectionPos.first = r;
@@ -95,8 +90,7 @@ void SchaakGUI::clicked(int r, int k) {
         return;
     }
 
-    // Second click = target pos OR unselect piece
-    pair<int,int> myPos = selectedPiece->getPos();
+    pair<int,int> activePiecePosition = selectedPiece->getPos();
     if (selectionPos == clickedPos) {
         pieceSelected = false;
         vector<pair<int,int>> validMoves = selectedPiece->validMoves(g);
@@ -108,12 +102,11 @@ void SchaakGUI::clicked(int r, int k) {
     }
     vector<pair<int, int>> validMoves = selectedPiece->validMoves(g);
 
-    // check if the clickedPos is a valid move
     auto it = std::find(validMoves.begin(), validMoves.end(), clickedPos);
     if (it != validMoves.end()) {
         g.move(selectedPiece, clickedPos.first, clickedPos.second);
         removeAllMarking();
-        updateGameInfo(clickedPos, myPos, validMoves);
+        updateGameInfo(clickedPos, activePiecePosition, validMoves);
 
     }
         update();
@@ -197,55 +190,6 @@ void SchaakGUI::open() {
 
 
 void SchaakGUI::undo() {
-//    if (g.playAgainstAI) {  //   = go two moves back
-//        message("UNDO");
-//        if (!g.turn) return;    // should always be white's whiteToMove
-//
-//        if (g.undoStack.previous_position.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
-//
-//        pair<int,int> originalPos = g.undoStack.previous_position.back();    // target pos of this undo
-//        SchaakStuk* s = g.undoStack.last_piece.back();
-//        pair<int,int> myPos(s->getPos());
-//
-//        // update Redo-stacks
-//        g.redoStack.last_piece.push_back(s);
-//        g.redoStack.previous_position.push_back(myPos);
-//
-//        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
-//        s->setPos(originalPos);
-//        if (g.undoStack.captured_piece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.undoStack.captured_piece.back());   // restore captured piece
-//        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
-//        if (g.undoStack.previous_position.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
-//// pop the Undo-Stacks
-//        g.undoStack.captured_piece.pop_back();
-//        g.undoStack.previous_position.pop_back();
-//        g.undoStack.last_piece.pop_back();
-//
-//        if (g.turn) g.turn = false; else g.turn = true;     // switch who's whiteToMove it is
-//        g.moveCount--;  // decrement movecount
-//        //  'SECOND' UNDO (moving the white piece back)
-//        originalPos = g.undoStack.previous_position.back();    // target pos of this undo
-//        s = g.undoStack.last_piece.back();
-//        myPos = pair<int,int>(s->getPos());
-//
-//        // update Redo-stacks
-//        g.redoStack.last_piece.push_back(s);
-//        g.redoStack.previous_position.push_back(myPos);
-//
-//        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
-//        s->setPos(originalPos);
-//        if (g.undoStack.captured_piece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.undoStack.captured_piece.back());   // restore captured piece
-//        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
-//        update();
-//
-//        // pop the Undo-Stacks
-//        g.undoStack.captured_piece.pop_back();
-//        g.undoStack.previous_position.pop_back();
-//        g.undoStack.last_piece.pop_back();
-//
-//        if (g.whiteToMove) g.turn = false; else g.turn = true;     // switch who's turn it is
-//        g.moveCount--;  // decrement movecount
-//    }
     if (!g.playAgainstAI) {  // not playing AI = go 1 move back (so black can also move again)
         message("UNDO");
 

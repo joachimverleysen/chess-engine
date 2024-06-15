@@ -45,10 +45,11 @@ public:
     bool playAgainstAI = false;
 
     int moveCount=0;
-    bool whiteToMove() const;     // true for White, false for Black
+    bool whiteToMove() const;
 
     zw colorToMove() const;
-    bool move(SchaakStuk* s,int r, int k); // Verplaats stuk s naar rij r en kolom k
+    bool move(SchaakStuk* s,int r, int k);
+    bool validMove(SchaakStuk* piece, pair<int, int> targetPosition);
 
     pair<int,int> findKing(zw kleur) const;
     bool schaak(zw kleur);

@@ -71,3 +71,14 @@
 4	15	1718464909871346351	/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/mocs_compilation.cpp	2533ff35b0ad0545
 15	1087	1718464909883346494	CMakeFiles/schaken.dir/SchaakGUI.cpp.o	f3d33e2983a54728
 1088	1401	1718464910955359319	schaken	1ca39364b25d66de
+4	152	1718465441060523548	schaken_autogen/timestamp	2533ff35b0ad0545
+4	152	1718465441060523548	schaken_autogen/mocs_compilation.cpp	2533ff35b0ad0545
+4	152	1718465441060523548	/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/timestamp	2533ff35b0ad0545
+4	152	1718465441060523548	/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/schaken_autogen/mocs_compilation.cpp	2533ff35b0ad0545
+154	1405	1718465441064523582	CMakeFiles/schaken.dir/SchaakStuk.cpp.o	e09667e712633ca8
+152	1456	1718465441064523582	CMakeFiles/schaken.dir/schaken_autogen/mocs_compilation.cpp.o	71980c3aca85eb7c
+153	1514	1718465441064523582	CMakeFiles/schaken.dir/main.cpp.o	167a2c50cefceda0
+154	1645	1718465441064523582	CMakeFiles/schaken.dir/SchaakGUI.cpp.o	f3d33e2983a54728
+153	1718	1718465441064523582	CMakeFiles/schaken.dir/game.cpp.o	579ada7a198bfd1b
+153	2950	1718465441064523582	CMakeFiles/schaken.dir/guicode/ChessWindow.cpp.o	6d55b21aacf01b85
+2950	3257	1718465443860547630	schaken	1ca39364b25d66de

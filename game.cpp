@@ -722,3 +722,5 @@ zw Game::colorToMove() const {
 bool Game::whiteToMove() const {
     return (moveCount%2==0);
 }
+
+
