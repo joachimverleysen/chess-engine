@@ -52,6 +52,8 @@ private:
     void afterTheMove(pair<int,int> clickedPos, pair<int,int> myPos, vector<pair<int,int>> validMoves);
 
     void updateMarking();
+
+    void doPieceThreatMarking();
 };
 
 #endif //SCHAKEN_SCHAAKGUI_H

@@ -282,7 +282,7 @@ void Game::aiMoves() {
     setPiece(myPos.first, myPos.second, nullptr);
 
 
-     
+
 
 }
 //todo: undo castle + en passant
@@ -676,4 +676,9 @@ vector<pair<int, int>> Game::piecesInVision(zw kleur) {
         }
     }
     return result;
+}
+
+zw Game::colorToMove() const {
+    if (turn) return wit;
+    return zwart;
 }

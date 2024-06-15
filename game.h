@@ -21,7 +21,6 @@ struct GameStack {
 class Game {
 // variabelen om de status van het spel/bord te bewaren
 
-
 public:
     SchaakStuk* schaakbord[8][8];
     Game();
@@ -31,6 +30,8 @@ public:
 
     int moveCount=0;
     bool turn=(moveCount%2==0);     // true for White, false for Black
+
+    zw colorToMove() const;
     bool move(SchaakStuk* s,int r, int k); // Verplaats stuk s naar rij r en kolom k
 
     pair<int,int> findKing(zw kleur) const;
