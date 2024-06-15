@@ -38,7 +38,30 @@ for (int i=0; i<8; i++) {
 
 
 void SchaakGUI::updateMarking() {
-    if (selectedPiece == nullptr) return;
+    zw oppkleur = wit; if (selectedPiece->getKleur()==zwart) oppkleur = zwart;
+    vector<pair<int,int>> threatenedPieces = g.piecesInVision(oppkleur);
+    if (!pieceSelected) {
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                setPieceThreat(i, j, false);    // reset previous marks
+
+                // Set current marks pieces that can be captured by kleur
+                // Note: displayKills() returns whether this box is ticked in GUI
+                if (g.turn && displayKills()) {   // It is white's turn
+                    for (auto p : threatenedPieces) {
+                        setPieceThreat(p.first, p.second, true);
+                    }
+                }
+                else if (!g.turn && displayKills()) {     // it is black's turn
+                    for (auto p : threatenedPieces) {
+                        setPieceThreat(p.first, p.second, true);
+                    }
+                }
+            }
+
+        }
+        return;
+    }
     setTileSelect(selectedPiece->getPos().first, selectedPiece->getPos().second,true);
     vector<pair<int, int>> validMoves = selectedPiece->validMoves(g);
 
@@ -77,41 +100,17 @@ void SchaakGUI::clicked(int r, int k) {
         return;
     }
 
-    // pieceSelected must be true at this point (first click done)
-    // selectedPiece must be a valid piece (own color) at this point
-    // the second click can be: 1) the target position   OR   2) the current selection -> unselect
-    pair<int,int> myPos = selectedPiece->getPos(); // original position of the selected piece
-    if (selectionPos == clickedPos) {     // The current selection is clicked again -> unselect
+    // Second click = target pos OR unselect piece
+    pair<int,int> myPos = selectedPiece->getPos();
+    if (selectionPos == clickedPos) {
         pieceSelected = false;
         vector<pair<int,int>> validMoves = selectedPiece->validMoves(g);
-        setTileSelect(r,k,false);
-        for (auto p : validMoves) {
-            setTileFocus(p.first, p.second, false);  // remove the 'valid position marks'
-            setTileThreat(p.first, p.second, false); // remove tile threat marks
-        }
+        removeAllMarking();
+        updateMarking();
 
         // mark the piece threats again
-        zw oppkleur = wit; if (selectedPiece->getKleur()==zwart) oppkleur = zwart;
-        vector<pair<int,int>> threatenedPieces = g.piecesInVision(oppkleur);
-        for (int i = 0; i < 8; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                setPieceThreat(i, j, false);    // reset previous marks
 
-                // Set current marks pieces that can be captured by kleur
-                // Note: displayKills() returns whether this box is ticked in GUI
-                if (g.turn && displayKills()) {   // It is white's turn
-                    for (auto p : threatenedPieces) {
-                        setPieceThreat(p.first, p.second, true);
-                    }
-                }
-                else if (!g.turn && displayKills()) {     // it is black's turn
-                    for (auto p : threatenedPieces) {
-                        setPieceThreat(p.first, p.second, true);
-                    }
-                }
-            }
 
-        }
         update(); // update gui to show marking
 
         return;
