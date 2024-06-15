@@ -99,15 +99,15 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     if (myPos.second==k) ep = false;    // ep is a diagonal move so column indices must be different
     if (getPiece(r, k)!=nullptr) ep = false; // EP means the pawn should go to an empty square
     if (targetPos != enPassantSquare) ep = false;
-    if (epTarget.first == -1) ep = false;   // invalid epTarget (-1 = default value)
+    if (enPassantTargetPos.first == -1) ep = false;   // invalid enPassantTargetPos (-1 = default value)
     if (ep) {
         setPiece(targetPos.first, targetPos.second, s); // move the pawn to epSquare
         s->setPos(targetPos);   // update pawn's position
         setPiece(myPos.first, myPos.second, nullptr);   // clear original square
-        setPiece(epTarget.first, epTarget.second, nullptr); // Remove captured epTarget pawn
+        setPiece(enPassantTargetPos.first, enPassantTargetPos.second, nullptr); // Remove captured enPassantTargetPos pawn
 
         // reset en passant vars
-        epTarget = pair<int,int>(-1,-1);    // default value
+        enPassantTargetPos = pair<int,int>(-1, -1);    // default value
         enPassantSquare = pair<int,int>(-1,-1);
 
         pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr, pair<int, int>(-1, -1));
@@ -138,7 +138,6 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     auto it = find(zetten.begin(), zetten.end(), targetPos);
 
     if (it != zetten.end()) {
-        undoStack.captured_piece.push_back(getPiece(targetPos.first, targetPos.second));
         // stack undoStack.captured_piece
         // if there is a capture, the captured piece will be pushed. if not, a nullptr will be pushed
 
@@ -159,6 +158,43 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     return false;
 }
 
+
+void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk* selected,
+                                 pair<int, int> selectionPos) {
+    zw oppkleur = wit; if (selected->getKleur()==wit) oppkleur = zwart;
+    vector<pair<int,int>> threateneds = piecesInVision(oppkleur);
+    if (selected->getNaam()==pion &&
+        abs(clickedPos.first - myPosition.first)==2) {
+        // EP square is the square behind the pawn
+        if (whiteToMove()) enPassantSquare = pair<int,int>(selectionPos.first - 1, selectionPos.second);
+        else if (!whiteToMove()) enPassantSquare = pair<int,int>(selectionPos.first + 1, selectionPos.second);
+        enPassantTargetPos=pair<int,int>(selected->getPos().first, selected->getPos().second);
+        SchaakStuk* epTargetPiece = getPiece(enPassantTargetPos.first, enPassantTargetPos.second);
+
+        // make sure the enPassantTargetPos will be marked as 'piece threat' (see bottom of func)
+        // check if this pawn landed next to an enemy pawn -> this pawn is threatened because of ep
+        SchaakStuk* leftSquare = getPiece(enPassantTargetPos.first, enPassantTargetPos.second - 1);    // square to the left of enPassantTargetPos
+        SchaakStuk* rightSquare = getPiece(enPassantTargetPos.first, enPassantTargetPos.second + 1);    // square to the right of enPassantTargetPos
+
+        if (leftSquare != nullptr &&
+            leftSquare->getNaam() == pion &&
+            leftSquare->getKleur() != epTargetPiece->getKleur()) {
+            threateneds.push_back(enPassantTargetPos);}
+        if (rightSquare != nullptr &&
+            rightSquare->getNaam() == pion &&
+            rightSquare->getKleur() != epTargetPiece->getKleur()) {
+            threateneds.push_back(enPassantTargetPos);}
+
+
+    }
+    else {
+        enPassantSquare = pair<int, int>(-1, -1); // reset
+
+        // initialise threateneds vector with its default values
+        // this is for the 'piece threat' tile marks to work ()
+    }
+}
+
 void Game::aiChoses() { // func where ai choses a piece + position to move
     vector<SchaakStuk*> shuffled = getActivePieces();
 
@@ -170,7 +206,7 @@ void Game::aiChoses() { // func where ai choses a piece + position to move
     std::shuffle(shuffled.begin(), shuffled.end(), rng);
     // shuffled now contains the active pieces but shuffled
 
-    if (turn) return;   // It should be black's turn
+    if (whiteToMove()) return;   // It should be black's whiteToMove
     // This function allows to play against AI player. AI is black
 
     // Choose a move. Priority = checkmate, check, capture, random
@@ -539,8 +575,8 @@ bool Game::kCastleValid(zw kleur) {
      */
 
     // Castle is not possible if your king has already moved:
-    if (kleur==zwart && bKingHasMoved) return false;
-    if (kleur==wit && wKingHasMoved) return false;
+    if (kleur==zwart && blackKingMoved) return false;
+    if (kleur==wit && whiteKingMoved) return false;
     if (schaak(kleur)) return false;    // can't castle when in check
     pair<int,int> kingPos = findKing(kleur);
 
@@ -576,8 +612,8 @@ bool Game::qCastleValid(zw kleur) {
      */
 
     // Castle is not possible if your king has already moved:
-    if (kleur==zwart && bKingHasMoved) return false;
-    if (kleur==wit && wKingHasMoved) return false;
+    if (kleur==zwart && blackKingMoved) return false;
+    if (kleur==wit && whiteKingMoved) return false;
     if (schaak(kleur)) return false;    // can't castle when in check
     pair<int,int> kingPos = findKing(kleur);
 
@@ -679,6 +715,10 @@ vector<pair<int, int>> Game::piecesInVision(zw kleur) {
 }
 
 zw Game::colorToMove() const {
-    if (turn) return wit;
+    if (whiteToMove()) return wit;
     return zwart;
+}
+
+bool Game::whiteToMove() const {
+    return (moveCount%2==0);
 }

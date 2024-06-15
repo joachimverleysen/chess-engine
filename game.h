@@ -15,7 +15,23 @@ struct GameStack {
     vector<SchaakStuk*> captured_piece;
     vector<pair<int, int>> previous_position;
 
-//    void push(Sch)
+    void push(SchaakStuk* last, SchaakStuk* captured, pair<int, int> previous_pos) {
+        last_piece.push_back(last);
+        captured_piece.push_back(captured);
+        previous_position.push_back(previous_pos);
+    }
+
+    void pop() {
+        last_piece.pop_back();
+        captured_piece.pop_back();
+        previous_position.pop_back();
+    }
+
+    void clear() {
+        last_piece.clear();
+        captured_piece.clear();
+        previous_position.clear();
+    }
 };
 
 class Game {
@@ -29,7 +45,7 @@ public:
     bool playAgainstAI = false;
 
     int moveCount=0;
-    bool turn=(moveCount%2==0);     // true for White, false for Black
+    bool whiteToMove() const;     // true for White, false for Black
 
     zw colorToMove() const;
     bool move(SchaakStuk* s,int r, int k); // Verplaats stuk s naar rij r en kolom k
@@ -46,8 +62,8 @@ public:
     vector<SchaakStuk*> getActivePieces() const;
     bool fakeMove(SchaakStuk *s, int r, int k);
     vector<pair<int, int>> kingControls(zw kleur) const;  // squares that the king controls
-    bool wKingHasMoved=false;   // white king has moved?
-    bool bKingHasMoved=false;   // black king has moved?
+    bool whiteKingMoved=false;   // white king has moved?
+    bool blackKingMoved=false;   // black king has moved?
 
     pair<SchaakStuk*, pair<int, int>> castling_rook;        // + the original posistion of the rook
 
@@ -61,7 +77,7 @@ public:
     vector<pair<SchaakStuk*, pair<int, int>>> castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
 
     pair<int,int> enPassantSquare = pair<int,int>(-1,-1);   // initialise with invalid pos
-    pair<int,int> epTarget = pair<int,int>(-1,-1); // The pawn that is a target for en passant
+    pair<int,int> enPassantTargetPos = pair<int,int>(-1, -1); // The pawn that is a target for en passant
     vector<pair<SchaakStuk*, pair<int, int>>> rd_castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
 
 
@@ -101,6 +117,9 @@ public:
     bool aiFakeMove(SchaakStuk *s, int r, int k);
 
     SchaakStuk *getCastlingRook(pair<int, int> king_target_pos, SchaakStuk *king);
+
+    void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected,
+                               pair<int, int> selectionPos);
 };
 
 #endif //SCHAKEN_GAME_H
