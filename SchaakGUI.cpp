@@ -380,37 +380,37 @@ void SchaakGUI::undo() {
 
         if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
 
-        pair<int, int> originalPos = g.ud_prevPos.back();    // target pos of this undo
-        SchaakStuk *s = g.ud_lastMovingPiece.back();
-        pair<int, int> myPos(s->getPos());
+        pair<int, int> previous_position = g.ud_prevPos.back();    // target pos of this undo
+        SchaakStuk *piece = g.ud_lastMovingPiece.back();
+        pair<int, int> my_position(piece->getPos());
 
         // update Redo-stacks
-        g.rd_lastMovingPiece.push_back(s);
-        g.rd_prevPos.push_back(myPos);
+        g.rd_lastMovingPiece.push_back(piece);
+        g.rd_prevPos.push_back(my_position);
 
-        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
-        s->setPos(originalPos);
-        if (g.ud_capturedPiece.back() != nullptr)
-            g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
-        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
+        g.setPiece(previous_position.first, previous_position.second, piece);   // move last moving piece back
+        piece->setPos(previous_position);
+        if (!g.ud_capturedPiece.empty() &&g.ud_capturedPiece.back() != nullptr)
+            g.setPiece(my_position.first, my_position.second, g.ud_capturedPiece.back());   // restore captured piece
+        else g.setPiece(my_position.first, my_position.second, nullptr);  // clear square again if there was no capture
         update();
 
 
         // Check for castle
-        if ((g.castling_rook_stack.back().first != nullptr) && s->getNaam() == koning) {
+/*        if ((g.castling_rook_stack.back().first != nullptr) && piece->getNaam() == koning) {
             auto rook = g.castling_rook_stack.back().first;
             auto rook_pos_orig = g.castling_rook_stack.back().second;
             auto rookPos = rook->getPos();
             g.setPiece(rook_pos_orig.first, rook_pos_orig.second, rook);
             g.setPiece(rookPos.first, rookPos.second, nullptr);
             rook->setPos(rook_pos_orig);
-            if (s->getKleur()==wit) g.wKingHasMoved =false;
+            if (piece->getKleur()==wit) g.wKingHasMoved =false;
             else g.bKingHasMoved = false;
             pair<SchaakStuk*, pair<int, int>> castling_rook_pair(rook, rookPos);
             g.rd_castling_rook_stack.push_back(castling_rook_pair);
             update();
 
-        }
+        }*/
 
 
 
@@ -419,9 +419,9 @@ void SchaakGUI::undo() {
         g.ud_capturedPiece.pop_back();
         g.ud_prevPos.pop_back();
         g.ud_lastMovingPiece.pop_back();
-        g.castling_rook_stack.pop_back();
+//        g.castling_rook_stack.pop_back();
 
-        if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
+        if (g.turn) g.turn = false; else g.turn = true;     // switch who'piece turn it is
         g.moveCount--;  // decrement movecount
     }
 }
@@ -433,15 +433,16 @@ void SchaakGUI::redo() {
 
 
     // Note: No pieces to restore in an undo. (Just like regular moves)
-    pair<int,int> originalPos = g.rd_prevPos.back();    // target pos of this redo
-    SchaakStuk* s = g.rd_lastMovingPiece.back();
-    pair<int,int> myPos(s->getPos());
+    pair<int,int> previous_position = g.rd_prevPos.back();    // target pos of this redo
+    SchaakStuk* piece = g.rd_lastMovingPiece.back();
+    pair<int,int> my_position(piece->getPos());
+    g.ud_capturedPiece.push_back(g.getPiece(previous_position.first, previous_position.second));
 
-    g.setPiece(originalPos.first, originalPos.second, s);
-    s->setPos(originalPos);
-    g.setPiece(myPos.first, myPos.second, nullptr);  // clear original square
+    g.setPiece(previous_position.first, previous_position.second, piece);
+    piece->setPos(previous_position);
+    g.setPiece(my_position.first, my_position.second, nullptr);  // clear original square
     update();
-    if (s->getNaam() == koning && abs(originalPos.second-myPos.second)>1) {     // Castle
+/*    if (piece->getNaam() == koning && abs(previous_position.second-my_position.second)>1) {     // Castle
         auto rook = g.rd_castling_rook_stack.back().first;
         auto rookPos = rook->getPos();
         auto rook_prev_pos = g. rd_castling_rook_stack.back().second;
@@ -454,12 +455,15 @@ void SchaakGUI::redo() {
 
         update();
 
-    }
+    }*/
 
     g.rd_prevPos.pop_back();
     g.rd_lastMovingPiece.pop_back();
-    g.rd_castling_rook_stack.pop_back();
-    if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
+//    g.rd_castling_rook_stack.pop_back();
+    g.ud_prevPos.push_back(my_position);
+    g.ud_lastMovingPiece.push_back(piece);
+
+    if (g.turn) g.turn = false; else g.turn = true;     // switch who'piece turn it is
     g.moveCount++; // increment movecount
 }
 
