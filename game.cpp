@@ -287,23 +287,6 @@ void Game::aiMoves() {
 }
 //todo: undo castle + en passant
 
-void Game::undo() {
-    pair<int,int> originalPos = undoStack.previous_position.back();
-    SchaakStuk* s = undoStack.last_piece.back();
-    pair<int,int> myPos(s->getPos());
-    setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
-    s->setPos(originalPos);
-    if (undoStack.captured_piece.back() != nullptr) {
-        setPiece(myPos.first, myPos.second, undoStack.captured_piece.back());   // restore captured piece
-    }
-    else setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
-
-    // pop all the stacks
-    undoStack.captured_piece.pop_back();
-    undoStack.previous_position.pop_back();
-    undoStack.last_piece.pop_back();
-}
-
 void Game::executeCastle(zw kleur, pair<int, int> pos) {
     // Don't call this func if castling is not valid
     // position will be a the square to to places from the king's left (if queenside) or right (kingside)

@@ -47,7 +47,6 @@ void SchaakGUI::clicked(int r, int k) {
     pair<int, int> clickedPos(r, k);
     SchaakStuk *clickedItem = g.getPiece(r, k);     // can be a piece or a nullptr (empty square)
 
-    //todo: fix nesting
     if (!pieceSelected) {
         if (clickedItem != nullptr) {
             if (clickedItem->getKleur() == wit && g.turn ||         // White's turn and white piece selected
