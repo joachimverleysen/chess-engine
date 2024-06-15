@@ -43,17 +43,11 @@ for (int i=0; i<8; i++) {
 void SchaakGUI::clicked(int r, int k) {
     if (g.schaakmat(wit) || g.schaakmat(zwart) || g.pat(wit) || g.pat(zwart)) return;
 
-    // Wat hier staat is slechts een voorbeeldje dat wordt afgespeeld ter illustratie.
-    // Jouw code zal er helemaal anders uitzien en zal enkel de aanpassing in de spelpositie maken en er voor
-    // zorgen dat de visualisatie (al dan niet via update) aangepast wordt.
 
-    // Volgende schaakstukken worden aangemaakt om het voorbeeld te illustreren.
-    // In jouw geval zullen de stukken uit game g komen
     pair<int, int> clickedPos(r, k);
     SchaakStuk *clickedItem = g.getPiece(r, k);     // can be a piece or a nullptr (empty square)
 
-
-
+    //todo: fix nesting
     if (!pieceSelected) {
         if (clickedItem != nullptr) {
             if (clickedItem->getKleur() == wit && g.turn ||         // White's turn and white piece selected
