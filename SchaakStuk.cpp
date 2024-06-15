@@ -9,37 +9,28 @@
 #include <algorithm>
 using std::cout; using std::vector; using std::pair; using std::find;
 
-// Schaakstuk methods
 pair<int, int> SchaakStuk::getPos() const {
-    // The object on which this method is called may not be a nullptr !!!
     return position;
 }
 
-// checks for every 'mogelijke zet' if the move is also legal
-// (that means: not putting yourself in check or ignoring check)
+
 vector<pair<int, int>> SchaakStuk::validMoves(Game &game) {
     vector<pair<int,int>> result;
-    // We will loop through every possible move and execute the move (without updating GUI)
-    // We will check if the move results in the moving player being in check
-    // In that case, the move is not legal and will be undone. it will not be added to the legal moves
+
     for (auto p : mogelijke_zetten(game)) {
-        if (testSelfCheck(game, p.first, p.second)) continue; // test if the move results in a self check (illegal)
+        if (testSelfCheck(game, p.first, p.second)) continue;
         result.push_back(p);   // position is legal -> add to result
 
     }
-
-    // Add castle moves if valid:
     if (this->getNaam()==koning) {
         pair<int,int> kingPos = this->getPos();
-        //kingside castle
-        if (game.kCastleValid(this->getKleur())) {  // kingside castle valid
+        if (game.kingSideCastleIsValid(this->getKleur())) {
             pair<int,int> p(kingPos.first, kingPos.second+2);
-            result.push_back(p);    // add square that is 2 places to the king's right
+            result.push_back(p);
         }
-        //queenside castle
-        if (game.qCastleValid(this->getKleur())) {  // kingside castle valid
+        if (game.queenSideCastleIsValid(this->getKleur())) {
             pair<int,int> p(kingPos.first, kingPos.second-2);
-            result.push_back(p);    // add square that is 2 places to the king's right
+            result.push_back(p);
         }
     }
 
@@ -48,22 +39,21 @@ vector<pair<int, int>> SchaakStuk::validMoves(Game &game) {
 
 
 bool SchaakStuk::testSelfCheck(Game &g, int r, int k) {
-    pair<int,int> myPos = getPos(); // original position
-    g.fakeMove(this, r, k);  // execute the FAKE MOVE (GUI won't be updated)
+    pair<int,int> myPos = getPos();
+    g.fakeMove(this, r, k);
     g.fakeMoveMade=true;
-    // if a piece was captured in the fake move, it will be stored in tempPiece to restore it in the undo.
     if (g.schaak(getKleur())) {  // player tried to put himself in check
         // UNDO FAKE MOVE:
         g.fakeMove(this, myPos.first, myPos.second); // move the piece back to myPos
         g.fakeMoveMade=false; // fake move is undone -> var back to false
-        g.tempPiece=nullptr; // resetting purposes
+        g.tempCapturedPiece=nullptr; // resetting purposes
         return true;
         // pieceSelected remains true since there hasn't been made a valid move
     }
     // UNDO FAKE MOVE:
     g.fakeMove(this, myPos.first, myPos.second); // move the piece back to myPos
     g.fakeMoveMade=false; // fake move is undone -> var back to false
-    g.tempPiece=nullptr; // resetting purposes
+    g.tempCapturedPiece=nullptr; // resetting purposes
 
 
     return false;
@@ -148,12 +138,7 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
             game.getPiece(diagR.first, diagR.second)->getKleur() != this->getKleur()) {
         result.push_back(diagR);
     }
-//
-//    // Check for en passant
-//    if (game.getEnPassantSquare().first == myPos.first && abs(game.getEnPassantSquare().second - myPos.second) == 1) {
-//        // En passant square is next to the current pawn
-//        result.emplace_back(game.getEnPassantSquare().first + (getKleur() == zwart ? 1 : -1), game.getEnPassantSquare().second);
-//    }
+
 
     return result;
 }
@@ -163,11 +148,6 @@ vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van 
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
-
-    // The bishop moves diagonally.
-    // We will use 4 loops for the 4 different directions:
-        // (x+1,y+1) ; (x-1,y-1) ; (x-1,y+1) ; (x+1,y-1)
-    // When we encounter a non-empty square, we will check first if the piece is of the opposite color -> capture possible
 
 
     for (int i = 1; myPos.first + i < 8 && myPos.second + i < 8; i++) {
@@ -238,10 +218,6 @@ vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van 
 vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
-
-    // The rook moves in straight lines.
-    // We will use 4 loops for the 4 different directions:
-    // (x,y+1) ; (x+1,y) ; (x,y-1) ; (x-1,y)
 
     // Moving upwards
     for (int i = 1; myPos.first - i >= 0; i++) {

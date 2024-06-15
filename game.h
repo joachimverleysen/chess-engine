@@ -89,9 +89,9 @@ public:
     // the reason for the var above is for the fake move (undo?) to work properly -> see fakeMove()
     // purpose of fake moves: to test if the move results in a self-check (illegal)
 
-    SchaakStuk* tempPiece=nullptr;
+    SchaakStuk* tempCapturedPiece=nullptr;
     // purpose of this var: make sure that a fake move doesn't actually capture pieces.
-    // the tempPiece is the piece that is captured within a fake move, and will be restored in the 'undo'
+    // the tempCapturedPiece is the piece that is captured within a fake move, and will be restored in the 'undo'
 
     bool aiFakeMoveMade=false;
     SchaakStuk* tempPiece_2 = nullptr;  // temp piece used in the aiFakeMoveMade
@@ -99,15 +99,13 @@ public:
 
     // Hier zet jij jouw datastructuur neer om het bord te bewaren ...
 
-    bool kCastleValid(zw kleur);
+    bool kingSideCastleIsValid(zw kleur);
 
     void executeCastle(zw kleur, pair<int, int> pos);
 
-    bool qCastleValid(zw kleur);
+    bool queenSideCastleIsValid(zw kleur);
 
     vector<pair<int, int>> piecesInVision(zw kleur);
-
-    void executeEP(zw kleur, pair<int, int> pos);
 
     void promote(int r, int k);
 
