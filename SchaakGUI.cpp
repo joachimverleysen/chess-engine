@@ -169,12 +169,12 @@ void SchaakGUI::afterTheMove(pair<int,int> clickedPos, pair<int,int> myPos, vect
      * check for check, mate, stalemate...
      * update moveCount + 'turn'
      */
-    g.ud_lastMovingPiece.push_back(selectedPiece);  // purpose = undo func
-    g.ud_prevPos.push_back(selectionPos);   // original pos of last moving piece
+    g.undoStack.last_piece.push_back(selectedPiece);  // purpose = undo func
+    g.undoStack.previous_position.push_back(selectionPos);   // original pos of last moving piece
 
     // empty the Redo-Stacks
-    g.rd_prevPos.clear();
-    g.rd_lastMovingPiece.clear();
+    g.redoStack.previous_position.clear();
+    g.redoStack.last_piece.clear();
 
 
     // check for PROMOTION
@@ -329,47 +329,47 @@ void SchaakGUI::undo() {
 //        message("UNDO");
 //        if (!g.turn) return;    // should always be white's turn
 //
-//        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
+//        if (g.undoStack.previous_position.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
 //
-//        pair<int,int> originalPos = g.ud_prevPos.back();    // target pos of this undo
-//        SchaakStuk* s = g.ud_lastMovingPiece.back();
+//        pair<int,int> originalPos = g.undoStack.previous_position.back();    // target pos of this undo
+//        SchaakStuk* s = g.undoStack.last_piece.back();
 //        pair<int,int> myPos(s->getPos());
 //
 //        // update Redo-stacks
-//        g.rd_lastMovingPiece.push_back(s);
-//        g.rd_prevPos.push_back(myPos);
+//        g.redoStack.last_piece.push_back(s);
+//        g.redoStack.previous_position.push_back(myPos);
 //
 //        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
 //        s->setPos(originalPos);
-//        if (g.ud_capturedPiece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
+//        if (g.undoStack.captured_piece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.undoStack.captured_piece.back());   // restore captured piece
 //        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
-//        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
+//        if (g.undoStack.previous_position.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
 //// pop the Undo-Stacks
-//        g.ud_capturedPiece.pop_back();
-//        g.ud_prevPos.pop_back();
-//        g.ud_lastMovingPiece.pop_back();
+//        g.undoStack.captured_piece.pop_back();
+//        g.undoStack.previous_position.pop_back();
+//        g.undoStack.last_piece.pop_back();
 //
 //        if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
 //        g.moveCount--;  // decrement movecount
 //        //  'SECOND' UNDO (moving the white piece back)
-//        originalPos = g.ud_prevPos.back();    // target pos of this undo
-//        s = g.ud_lastMovingPiece.back();
+//        originalPos = g.undoStack.previous_position.back();    // target pos of this undo
+//        s = g.undoStack.last_piece.back();
 //        myPos = pair<int,int>(s->getPos());
 //
 //        // update Redo-stacks
-//        g.rd_lastMovingPiece.push_back(s);
-//        g.rd_prevPos.push_back(myPos);
+//        g.redoStack.last_piece.push_back(s);
+//        g.redoStack.previous_position.push_back(myPos);
 //
 //        g.setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
 //        s->setPos(originalPos);
-//        if (g.ud_capturedPiece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.ud_capturedPiece.back());   // restore captured piece
+//        if (g.undoStack.captured_piece.back() != nullptr) g.setPiece(myPos.first, myPos.second, g.undoStack.captured_piece.back());   // restore captured piece
 //        else g.setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
 //        update();
 //
 //        // pop the Undo-Stacks
-//        g.ud_capturedPiece.pop_back();
-//        g.ud_prevPos.pop_back();
-//        g.ud_lastMovingPiece.pop_back();
+//        g.undoStack.captured_piece.pop_back();
+//        g.undoStack.previous_position.pop_back();
+//        g.undoStack.last_piece.pop_back();
 //
 //        if (g.turn) g.turn = false; else g.turn = true;     // switch who's turn it is
 //        g.moveCount--;  // decrement movecount
@@ -378,20 +378,20 @@ void SchaakGUI::undo() {
         message("UNDO");
 
 
-        if (g.ud_prevPos.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
+        if (g.undoStack.previous_position.empty()) return;   // Undo-stacks empty -> = starting pos -> no undo possible
 
-        pair<int, int> previous_position = g.ud_prevPos.back();    // target pos of this undo
-        SchaakStuk *piece = g.ud_lastMovingPiece.back();
+        pair<int, int> previous_position = g.undoStack.previous_position.back();    // target pos of this undo
+        SchaakStuk *piece = g.undoStack.last_piece.back();
         pair<int, int> my_position(piece->getPos());
 
         // update Redo-stacks
-        g.rd_lastMovingPiece.push_back(piece);
-        g.rd_prevPos.push_back(my_position);
+        g.redoStack.last_piece.push_back(piece);
+        g.redoStack.previous_position.push_back(my_position);
 
         g.setPiece(previous_position.first, previous_position.second, piece);   // move last moving piece back
         piece->setPos(previous_position);
-        if (!g.ud_capturedPiece.empty() &&g.ud_capturedPiece.back() != nullptr)
-            g.setPiece(my_position.first, my_position.second, g.ud_capturedPiece.back());   // restore captured piece
+        if (!g.undoStack.captured_piece.empty() &&g.undoStack.captured_piece.back() != nullptr)
+            g.setPiece(my_position.first, my_position.second, g.undoStack.captured_piece.back());   // restore captured piece
         else g.setPiece(my_position.first, my_position.second, nullptr);  // clear square again if there was no capture
         update();
 
@@ -416,9 +416,9 @@ void SchaakGUI::undo() {
 
 
         // pop the Undo-Stacks
-        g.ud_capturedPiece.pop_back();
-        g.ud_prevPos.pop_back();
-        g.ud_lastMovingPiece.pop_back();
+        g.undoStack.captured_piece.pop_back();
+        g.undoStack.previous_position.pop_back();
+        g.undoStack.last_piece.pop_back();
 //        g.castling_rook_stack.pop_back();
 
         if (g.turn) g.turn = false; else g.turn = true;     // switch who'piece turn it is
@@ -429,14 +429,14 @@ void SchaakGUI::undo() {
 void SchaakGUI::redo() {
     message("REDO");
 
-    if (g.rd_lastMovingPiece.empty()) return; // Redo-stacks are empty
+    if (g.redoStack.last_piece.empty()) return; // Redo-stacks are empty
 
 
     // Note: No pieces to restore in an undo. (Just like regular moves)
-    pair<int,int> previous_position = g.rd_prevPos.back();    // target pos of this redo
-    SchaakStuk* piece = g.rd_lastMovingPiece.back();
+    pair<int,int> previous_position = g.redoStack.previous_position.back();    // target pos of this redo
+    SchaakStuk* piece = g.redoStack.last_piece.back();
     pair<int,int> my_position(piece->getPos());
-    g.ud_capturedPiece.push_back(g.getPiece(previous_position.first, previous_position.second));
+    g.undoStack.captured_piece.push_back(g.getPiece(previous_position.first, previous_position.second));
 
     g.setPiece(previous_position.first, previous_position.second, piece);
     piece->setPos(previous_position);
@@ -457,11 +457,11 @@ void SchaakGUI::redo() {
 
     }*/
 
-    g.rd_prevPos.pop_back();
-    g.rd_lastMovingPiece.pop_back();
+    g.redoStack.previous_position.pop_back();
+    g.redoStack.last_piece.pop_back();
 //    g.rd_castling_rook_stack.pop_back();
-    g.ud_prevPos.push_back(my_position);
-    g.ud_lastMovingPiece.push_back(piece);
+    g.undoStack.previous_position.push_back(my_position);
+    g.undoStack.last_piece.push_back(piece);
 
     if (g.turn) g.turn = false; else g.turn = true;     // switch who'piece turn it is
     g.moveCount++; // increment movecount

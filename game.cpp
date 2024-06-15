@@ -138,8 +138,8 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     auto it = find(zetten.begin(), zetten.end(), targetPos);
 
     if (it != zetten.end()) {
-        ud_capturedPiece.push_back(getPiece(targetPos.first, targetPos.second));
-        // stack ud_capturedPiece
+        undoStack.captured_piece.push_back(getPiece(targetPos.first, targetPos.second));
+        // stack undoStack.captured_piece
         // if there is a capture, the captured piece will be pushed. if not, a nullptr will be pushed
 
         // Geldige positie voor de zet
@@ -274,7 +274,7 @@ void Game::aiChoses() { // func where ai choses a piece + position to move
 
 void Game::aiMoves() {
     pair<int,int> myPos = aiSelection->getPos();
-    ud_capturedPiece.push_back(getPiece(aiTargetPos.first, aiTargetPos.second));    // update undo-stack
+    undoStack.captured_piece.push_back(getPiece(aiTargetPos.first, aiTargetPos.second));    // update undo-stack
 
     setPiece(aiTargetPos.first, aiTargetPos.second, aiSelection);
 
@@ -288,20 +288,20 @@ void Game::aiMoves() {
 //todo: undo castle + en passant
 
 void Game::undo() {
-    pair<int,int> originalPos = ud_prevPos.back();
-    SchaakStuk* s = ud_lastMovingPiece.back();
+    pair<int,int> originalPos = undoStack.previous_position.back();
+    SchaakStuk* s = undoStack.last_piece.back();
     pair<int,int> myPos(s->getPos());
     setPiece(originalPos.first, originalPos.second, s);   // move last moving piece back
     s->setPos(originalPos);
-    if (ud_capturedPiece.back() != nullptr) {
-        setPiece(myPos.first, myPos.second, ud_capturedPiece.back());   // restore captured piece
+    if (undoStack.captured_piece.back() != nullptr) {
+        setPiece(myPos.first, myPos.second, undoStack.captured_piece.back());   // restore captured piece
     }
     else setPiece(myPos.first, myPos.second, nullptr);  // clear square again if there was no capture
 
     // pop all the stacks
-    ud_capturedPiece.pop_back();
-    ud_prevPos.pop_back();
-    ud_lastMovingPiece.pop_back();
+    undoStack.captured_piece.pop_back();
+    undoStack.previous_position.pop_back();
+    undoStack.last_piece.pop_back();
 }
 
 void Game::executeCastle(zw kleur, pair<int, int> pos) {

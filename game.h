@@ -10,6 +10,14 @@
 
 class SchaakStuk;
 
+struct GameStack {
+    vector<SchaakStuk*> last_piece;
+    vector<SchaakStuk*> captured_piece;
+    vector<pair<int, int>> previous_position;
+
+//    void push(Sch)
+};
+
 class Game {
 // variabelen om de status van het spel/bord te bewaren
 
@@ -46,24 +54,11 @@ public:
     SchaakStuk* aiSelection = nullptr;
     pair<int,int> aiTargetPos = pair<int,int>(-1,-1);
 
-    // UNDO STACKS (work synchronously)
-    vector<SchaakStuk*> ud_lastMovingPiece;   // Last piece that moved
-    // works as stack: last item is the actual last moving piece
-    vector<pair<int,int>> ud_prevPos;   // previous position of last moving piece
-    // works as stack: last item is previous pos. of the last moving piece
-    vector<SchaakStuk*> ud_capturedPiece; // piece that was captured in previous move (else nullptr)
-    // when a move does not involve a capture, a nullptr will be pushed on the stack
-    // when it does involve a capture, the captured piece will be pushed on the stack
+    GameStack undoStack;
+    GameStack redoStack;
 
     vector<pair<SchaakStuk*, pair<int, int>>> castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
-//todo: const correctness
-    // REDO STACKS (work synchronously)
-    // when an undo occurs, the previous state is pushed on the stacks
-    // when a regular move occurs, the Redo-stacks are emptied
-    vector<SchaakStuk*> rd_lastMovingPiece;   // Last piece that moved
-    vector<pair<int,int>> rd_prevPos;   // previous position of last moving piece
-    // when a move does not involve a capture, a nullptr will be pushed on the stack
-    // when it does involve a capture, the captured piece will be pushed on the stack
+
     pair<int,int> enPassantSquare = pair<int,int>(-1,-1);   // initialise with invalid pos
     pair<int,int> epTarget = pair<int,int>(-1,-1); // The pawn that is a target for en passant
     vector<pair<SchaakStuk*, pair<int, int>>> rd_castling_rook_stack;  // rook+original_pos, ELSE nullptr + (-1, -1)
