@@ -22,6 +22,7 @@ public:
     pair<int, int> selectionPos;
 
     SchaakStuk* selectedPiece;
+    SchaakStuk* clickedItem;
 
 private:
     Game g;
@@ -49,7 +50,13 @@ private:
     bool displayMoves();
     bool displayThreats();
 */
-    void afterTheMove(pair<int,int> clickedPos, pair<int,int> myPos, vector<pair<int,int>> validMoves);
+    void updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> myPos, const vector<pair<int, int>> &validMoves);
+
+    void updateMarking();
+
+    void doPieceThreatMarking();
+
+    void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition);
 };
 
 #endif //SCHAKEN_SCHAAKGUI_H
