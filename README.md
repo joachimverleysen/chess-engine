@@ -23,6 +23,6 @@ If you use or copy any part of this project, please ensure to give proper credit
 Any form of plagiarism is not allowed.
 
 ## To be implemented:
-- Calling UNDO/REDO on a promotion or en passant move
+- Calling UNDO/REDO on a promotion or En Passant move
 - Loading and saving chess positions
 
