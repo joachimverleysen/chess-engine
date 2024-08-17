@@ -16,3 +16,13 @@ Welcome to my Chess Engine project! This is a simple chess game developed as par
 To run this project, you need to have the following software installed:
 
 - **Qt5**: This project is built using the Qt5 framework, so you'll need to have it installed on your system.
+
+## Attribution Requirement
+
+If you use or copy any part of this project, please ensure to give proper credit by mentioning my name. 
+Any form of plagiarism is not allowed.
+
+## To be implemented:
+- Calling UNDO/REDO on a promotion or en passant move
+- Loading and saving chess positions
+
