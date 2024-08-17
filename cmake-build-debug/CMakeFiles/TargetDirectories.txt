@@ -1,5 +1,0 @@
-/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/CMakeFiles/schaken.dir
-/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/CMakeFiles/schaken_autogen_timestamp_deps.dir
-/home/joachimverleysen/Documents/sem1/inleiding_programmeren/practica/schaken/cmake-build-debug/CMakeFiles/schaken_autogen.dir

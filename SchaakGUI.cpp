@@ -211,7 +211,7 @@ void SchaakGUI::undo() {
 
 
         // Check for castle
-/*        if ((g.castling_rook_stack.back().first != nullptr) && piece->getNaam() == koning) {
+        if ((g.castling_rook_stack.back().first != nullptr) && piece->getNaam() == koning) {
             auto rook = g.castling_rook_stack.back().first;
             auto rook_pos_orig = g.castling_rook_stack.back().second;
             auto rookPos = rook->getPos();
@@ -224,7 +224,7 @@ void SchaakGUI::undo() {
             g.rd_castling_rook_stack.push_back(castling_rook_pair);
             update();
 
-        }*/
+        }
 
 
 
@@ -254,7 +254,7 @@ void SchaakGUI::redo() {
     piece->setPos(previous_position);
     g.setPiece(my_position.first, my_position.second, nullptr);  // clear original square
     update();
-/*    if (piece->getNaam() == koning && abs(previous_position.second-my_position.second)>1) {     // Castle
+    if (piece->getNaam() == koning && abs(previous_position.second-my_position.second)>1) {     // Castle
         auto rook = g.rd_castling_rook_stack.back().first;
         auto rookPos = rook->getPos();
         auto rook_prev_pos = g. rd_castling_rook_stack.back().second;
@@ -267,7 +267,7 @@ void SchaakGUI::redo() {
 
         update();
 
-    }*/
+    }
 
 
 
