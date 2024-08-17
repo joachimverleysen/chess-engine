@@ -118,6 +118,8 @@ void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, 
     g.moveCount++;
 
     g.undoStack.push(selectedPiece, clickedItem, selectionPos);
+    pair<SchaakStuk*, pair<int,int>> castling_rook_pair(nullptr, pair<int,int>(-1,-1));
+//    g.castling_rook_stack.push_back(castling_rook_pair);
 
 
     if (selectedPiece->getNaam()==pion &&
@@ -188,7 +190,6 @@ void SchaakGUI::open() {
     update();
 }
 
-
 void SchaakGUI::undo() {
     if (!g.playAgainstAI) {  // not playing AI = go 1 move back (so black can also move again)
         message("UNDO");
@@ -222,6 +223,7 @@ void SchaakGUI::undo() {
             else g.blackKingMoved = false;
             pair<SchaakStuk*, pair<int, int>> castling_rook_pair(rook, rookPos);
             g.rd_castling_rook_stack.push_back(castling_rook_pair);
+
             update();
 
         }
@@ -232,7 +234,9 @@ void SchaakGUI::undo() {
         // pop the Undo-Stacks
         g.undoStack.pop();
         g.redoStack.push(piece, captured, my_position);
-//        g.castling_rook_stack.pop_back();
+        g.castling_rook_stack.pop_back();
+
+
 
         g.moveCount--;  // decrement movecount
     }
@@ -254,6 +258,9 @@ void SchaakGUI::redo() {
     piece->setPos(previous_position);
     g.setPiece(my_position.first, my_position.second, nullptr);  // clear original square
     update();
+
+    pair<SchaakStuk*, pair<int, int>> castling_rook_pair(nullptr, pair<int,int>());
+
     if (piece->getNaam() == koning && abs(previous_position.second-my_position.second)>1) {     // Castle
         auto rook = g.rd_castling_rook_stack.back().first;
         auto rookPos = rook->getPos();
@@ -261,8 +268,9 @@ void SchaakGUI::redo() {
         g.setPiece(rook_prev_pos.first, rook_prev_pos.second, rook);
         g.setPiece(rookPos.first, rookPos.second, nullptr);
         rook->setPos(rook_prev_pos);
-        pair<SchaakStuk*, pair<int, int>> castling_rook_pair(rook, rookPos);
-        g.castling_rook_stack.push_back(castling_rook_pair);
+        castling_rook_pair = pair<SchaakStuk*, pair<int, int>>(rook, rookPos);
+        g.rd_castling_rook_stack.pop_back();
+
 
 
         update();
@@ -273,6 +281,8 @@ void SchaakGUI::redo() {
 
     g.redoStack.pop();
     g.undoStack.push(piece, captured, my_position);
+    g.castling_rook_stack.push_back(castling_rook_pair);
+
 
 
     g.moveCount++; // increment movecount
