@@ -1,4 +1,0 @@
-/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/build/CMakeFiles/schaken.dir
-/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/build/CMakeFiles/edit_cache.dir
-/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/build/CMakeFiles/rebuild_cache.dir
-/home/joachimverleysen/Documents/Vakken/inleiding_programmeren/practica/schaken/build/CMakeFiles/schaken_autogen.dir

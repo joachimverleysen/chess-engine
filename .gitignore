@@ -1,11 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/clion+all,windows,macos,linux,cmake,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=clion+all,windows,macos,linux,cmake,c++
 
-.idea/
-build/
-cmake-build-debug/.ninja_log
-cmake-build-debug/.ninja_deps
-CMakeFiles.
+.idea
+build
+cmake-build-debug
+CMakeFiles
 # Project specific
 *.json
 *.zip
@@ -238,4 +237,3 @@ $RECYCLE.BIN/
 .DS_Store
 
 ###
-/cmake-build-debug/
