@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=clion+all,windows,macos,linux,cmake,c++
 
 .idea
-build
+*build*
 cmake-build-debug
 CMakeFiles
 schaken_autogen
