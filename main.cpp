@@ -3,7 +3,7 @@
 //
 
 #include  <QApplication>
-#include  "SchaakGUI.h"
+#include  "src/SchaakGUI.h"
 
 int main(int argc, char *argv[])
 {

@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "game.h"
-#include "SchaakStuk.h"
+#include "src/game.h"
+#include "src/SchaakStuk.h"
 #include <QCloseEvent>
 class ChessBoard;
 
