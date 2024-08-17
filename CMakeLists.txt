@@ -46,7 +46,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 
 set(CMAKE_CXX_STANDARD 11)
-set(SOURCE_FILES main.cpp guicode/ChessWindow.cpp guicode/ChessWindow.h guicode/chessboard.cpp guicode/chessboard.h game.cpp game.h SchaakStuk.cpp SchaakStuk.h guicode/resources.h SchaakGUI.cpp SchaakGUI.h guicode/message.cpp guicode/message.h guicode/fileIO.cpp guicode/fileIO.h )
+set(SOURCE_FILES main.cpp guicode/ChessWindow.cpp guicode/ChessWindow.h guicode/chessboard.cpp guicode/chessboard.h src/game.cpp src/game.h src/SchaakStuk.cpp src/SchaakStuk.h guicode/resources.h src/SchaakGUI.cpp src/SchaakGUI.h guicode/message.cpp guicode/message.h guicode/fileIO.cpp guicode/fileIO.h )
 add_executable(schaken ${SOURCE_FILES})
 
 #qt5_use_modules(schaken Core Widgets Gui)
