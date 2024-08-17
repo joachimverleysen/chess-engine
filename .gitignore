@@ -5,6 +5,7 @@
 build
 cmake-build-debug
 CMakeFiles
+schaken_autogen
 # Project specific
 *.json
 *.zip
