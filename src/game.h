@@ -67,9 +67,6 @@ public:
     pair<SchaakStuk*, pair<int, int>> castling_rook;
 
 
-    SchaakStuk* aiSelection = nullptr;
-    pair<int,int> aiTargetPos = pair<int,int>(-1,-1);
-
     GameStack undoStack;
     GameStack redoStack;
 
@@ -96,8 +93,6 @@ public:
     vector<pair<int, int>> piecesInVision(zw kleur);
 
     void promote(int r, int k);
-
-    bool aiFakeMove(SchaakStuk *s, int r, int k);
 
     SchaakStuk *getCastlingRook(pair<int, int> king_target_pos, SchaakStuk *king);
 

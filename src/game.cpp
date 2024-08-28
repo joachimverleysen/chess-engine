@@ -276,30 +276,6 @@ bool Game::fakeMove(SchaakStuk* s, int r, int k) {
 }
 
 
-bool Game::aiFakeMove(SchaakStuk* s, int r, int k) {
-
-    if (s == nullptr) {
-        return false;
-    }
-
-    if (r < 0 || r > 7 || k < 0 || k > 7 ) {
-        return false;
-    }
-
-    auto myPos = s->getPos();
-    pair<int, int> targetPos(r, k);
-
-    if (getPiece(r,k)!=nullptr) tempPiece_2= getPiece(r,k);
-    setPiece(r,k,s);
-    setPiece(myPos.first, myPos.second, nullptr);
-
-    if (tempPiece_2 != nullptr && aiFakeMoveMade) setPiece(myPos.first, myPos.second, tempPiece_2);   // restore tempPiece_2
-    s->setPos(targetPos);
-
-    return true;
-
-}
-
 bool Game::schaak(zw kleur) {
     pair<int, int> kingPos = findKing(kleur);
 
