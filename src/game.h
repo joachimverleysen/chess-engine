@@ -68,6 +68,8 @@ public:
     bool playAgainstAI = false;
 
     int moveCount=0;
+    bool isCastleMove=false;
+    CastlingRook castlingRook;
     bool whiteToMove() const;
 
     zw colorToMove() const;

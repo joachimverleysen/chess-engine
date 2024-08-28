@@ -110,9 +110,15 @@ void SchaakGUI::clicked(int r, int k) {
 }
 
 void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> current_pos, const vector<pair<int, int>> &validMoves) {
-    CastlingRook castlingRook(nullptr, pair<int, int>());
     g.undoStack.push(selectedPiece, clickedItem, selectionPos);
     g.redoStack.push(nullptr, clickedItem, selectionPos);
+
+    CastlingRook castlingRook(nullptr, pair<int, int>());
+    if (g.isCastleMove) {
+        castlingRook.piece = g.castlingRook.piece;
+        castlingRook.position = g.castlingRook.position;
+    }
+    g.undoStack.pushCastlingRook(castlingRook);
 
     if (selectedPiece->getNaam()==pion &&
         (clickedPos.first==0 || clickedPos.first==7)) {
