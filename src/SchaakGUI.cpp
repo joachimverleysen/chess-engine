@@ -118,6 +118,7 @@ void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, 
     g.moveCount++;
     CastlingRook castlingRook(nullptr, pair<int, int>());
     g.undoStack.push(selectedPiece, clickedItem, selectionPos);
+    g.redoStack.push(nullptr, clickedItem, selectionPos);
 //    pair<SchaakStuk*, pair<int,int>> castling_rook_pair(nullptr, pair<int,int>(-1,-1));
 //    g.castling_rook_stack.push_back(castling_rook_pair);
 
@@ -250,6 +251,7 @@ void SchaakGUI::redo() {
     message("REDO");
 
     if (g.redoStack.last_piece.empty()) return; // Redo-stacks are empty
+    if (g.redoStack.last_piece.back() == nullptr) return; // Redo-stacks are empty
 
 
     // Note: No pieces to restore in an undo. (Just like regular moves)
