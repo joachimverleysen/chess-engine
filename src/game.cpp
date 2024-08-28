@@ -88,6 +88,8 @@ SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* ki
 // Als deze move niet mogelijk is, wordt false teruggegeven
 // en verandert er niets aan het schaakbord.
 // Anders wordt de move uitgevoerd en wordt true teruggegeven
+
+//todo: change logic of this function (for example rookstack update)
 bool Game::move(SchaakStuk* s, int r, int k) {
     auto myPos = s->getPos();
     pair<int, int> targetPos(r, k);
@@ -110,8 +112,10 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         enPassantTargetPos = pair<int,int>(-1, -1);    // default value
         enPassantSquare = pair<int,int>(-1,-1);
 
+        CastlingRook castlingRook(nullptr, pair<int, int>());
         pair<SchaakStuk*, pair<int, int>> castling_rook_piece(nullptr, pair<int, int>(-1, -1));
-        castling_rook_stack.push_back(castling_rook_piece);
+//        castling_rook_stack.push_back(castling_rook_piece);
+        undoStack.pushCastlingRook(castlingRook);
         return true;
     }
     // check if the move is castling:
@@ -120,14 +124,18 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         auto castling_rook_piece = getCastlingRook(targetPos, s);
         pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook_piece,
                                                              castling_rook_piece->getPos());
-        castling_rook_stack.push_back(castling_rook_pair);// check if distance between king and selectedPos is more then 1 ->castle
+        CastlingRook castlingRook(castling_rook_piece, castling_rook_piece->getPos());
+//        castling_rook_stack.push_back(castling_rook_pair);// check if distance between king and selectedPos is more then 1 ->castle
+        undoStack.pushCastlingRook(castlingRook);
         if (k>myPos.second && kingSideCastleIsValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
         else if (k<myPos.second && queenSideCastleIsValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
 
         return true;
     }
+    CastlingRook castlingRook(nullptr, pair<int, int>());
     pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr,pair<int, int>(-1, -1));
-    castling_rook_stack.push_back(castling_rook);
+//    castling_rook_stack.push_back(castling_rook);
+    undoStack.pushCastlingRook(castlingRook);
 
     // Controleer of de opgegeven positie binnen het schaakbord ligt
     if (r < 0 || r > 7 || k < 0 || k > 7 ) {

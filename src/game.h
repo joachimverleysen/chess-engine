@@ -11,9 +11,12 @@
 class SchaakStuk;
 
 typedef pair<SchaakStuk*, pair<int, int>> ActivePiece;
+
 struct CastlingRook {
     SchaakStuk* piece;
     pair<int, int> position;
+    CastlingRook() {piece=nullptr; position = pair<int,int>(-1,-1);}
+    CastlingRook(SchaakStuk* piece, pair<int, int> position) : piece(piece), position(position){};
 };
 struct GameStack {
     vector<SchaakStuk*> last_piece;
@@ -36,18 +39,23 @@ struct GameStack {
     void pushCastlingRook(CastlingRook& rook) {
         castling_rook.push_back(rook);
     }
+    void popCastlingRook() {
+        castling_rook.pop_back();
+    }
 
 
     void pop() {
         last_piece.pop_back();
         captured_piece.pop_back();
         previous_position.pop_back();
+        castling_rook.pop_back();
     }
 
     void clear() {
         last_piece.clear();
         captured_piece.clear();
         previous_position.clear();
+        castling_rook.pop_back();
     }
 };
 

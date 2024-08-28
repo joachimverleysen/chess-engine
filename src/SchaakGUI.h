@@ -50,7 +50,7 @@ private:
     bool displayMoves();
     bool displayThreats();
 */
-    void updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> myPos, const vector<pair<int, int>> &validMoves);
+    void updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> current_pos, const vector<pair<int, int>> &validMoves);
 
     void updateMarking();
 
