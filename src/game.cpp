@@ -67,18 +67,15 @@ void Game::setStartBord() {
 
 SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* king) {
     auto kingPos = king->getPos();
-    bool kingside = true;   // is it a kingside castle? (if not -> queenside)
+    bool kingside = true;
     if (king_target_pos.second < kingPos.second)  kingside=false;
-    // note: castling should already be valid, so we are not checking again
 
-    // move rook:
-    SchaakStuk* rook = nullptr; // initialise local var: = the castling rook
+    SchaakStuk* rook = nullptr;
     for (auto p : getActivePieces()) {
         pair<int,int> q = p->getPos();
         if (p->getKleur()!=king->getKleur() || p->getNaam()!=toren) continue;
-        // if it is a kingside castle, we are looking for the rook to the right of the king and vice versa
-        if (kingside && q.second<kingPos.second) continue; // wrong rook
-        if (!kingside && q.second>kingPos.second) continue; // wrong rook
+        if (kingside && q.second<kingPos.second) continue;
+        if (!kingside && q.second>kingPos.second) continue;
         rook = p;
     }
     return rook;
@@ -94,38 +91,33 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     auto myPos = s->getPos();
     pair<int, int> targetPos(r, k);
 
-    // check if the move is En Passant
     bool enpassant = true;
     if (s->getNaam()!=pion) enpassant = false;
-    if (enPassantSquare.first == -1) enpassant = false;    // enpassant not possible since no available enpassant square
-    if (myPos.second==k) enpassant = false;    // enpassant is a diagonal move so column indices must be different
-    if (getPiece(r, k)!=nullptr) enpassant = false; // EP means the pawn should go to an empty square
+    if (enPassantSquare.first == -1) enpassant = false;
+    if (myPos.second==k) enpassant = false;
+    if (getPiece(r, k)!=nullptr) enpassant = false;
     if (targetPos != enPassantSquare) enpassant = false;
-    if (enPassantTargetPos.first == -1) enpassant = false;   // invalid enPassantTargetPos (-1 = default value)
+    if (enPassantTargetPos.first == -1) enpassant = false;
     if (enpassant) {
-        setPiece(targetPos.first, targetPos.second, s); // move the pawn to epSquare
-        s->setPos(targetPos);   // update pawn's position
-        setPiece(myPos.first, myPos.second, nullptr);   // clear original square
-        setPiece(enPassantTargetPos.first, enPassantTargetPos.second, nullptr); // Remove captured enPassantTargetPos pawn
+        setPiece(targetPos.first, targetPos.second, s);
+        s->setPos(targetPos);
+        setPiece(myPos.first, myPos.second, nullptr);
+        setPiece(enPassantTargetPos.first, enPassantTargetPos.second, nullptr);
 
-        // reset en passant vars
-        enPassantTargetPos = pair<int,int>(-1, -1);    // default value
+        enPassantTargetPos = pair<int,int>(-1, -1);
         enPassantSquare = pair<int,int>(-1,-1);
 
         CastlingRook castlingRook(nullptr, pair<int, int>());
         pair<SchaakStuk*, pair<int, int>> castling_rook_piece(nullptr, pair<int, int>(-1, -1));
-//        castling_rook_stack.push_back(castling_rook_piece);
         undoStack.pushCastlingRook(castlingRook);
         return true;
     }
-    // check if the move is castling:
     if (s->getNaam()==koning &&
-        abs(myPos.second-k)>1) {
+    abs(myPos.second-k)>1) {
         auto castling_rook_piece = getCastlingRook(targetPos, s);
         pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook_piece,
                                                              castling_rook_piece->getPos());
         CastlingRook castlingRook(castling_rook_piece, castling_rook_piece->getPos());
-//        castling_rook_stack.push_back(castling_rook_pair);// check if distance between king and selectedPos is more then 1 ->castle
         undoStack.pushCastlingRook(castlingRook);
         if (k>myPos.second && kingSideCastleIsValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
         else if (k<myPos.second && queenSideCastleIsValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
@@ -134,30 +126,21 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     }
     CastlingRook castlingRook(nullptr, pair<int, int>());
     pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr,pair<int, int>(-1, -1));
-//    castling_rook_stack.push_back(castling_rook);
     undoStack.pushCastlingRook(castlingRook);
 
-    // Controleer of de opgegeven positie binnen het schaakbord ligt
     if (r < 0 || r > 7 || k < 0 || k > 7 ) {
-        return false; // Ongeldige positie
+        return false;
     }
-    // Controleer of de opgegeven positie een geldige zet is voor het schaakstuk
     vector<pair<int, int>> zetten = s->mogelijke_zetten(*this);
     auto it = find(zetten.begin(), zetten.end(), targetPos);
 
     if (it != zetten.end()) {
-        // stack undoStack.captured_piece
-        // if there is a capture, the captured piece will be pushed. if not, a nullptr will be pushed
 
-        // Geldige positie voor de zet
-
-        // Verplaats het schaakstuk naar het nieuwe veld
         setPiece(r,k,s);
 
-        // Wis het originele veld
+
         setPiece(myPos.first, myPos.second, nullptr);
 
-        // Werk de positie van het schaakstuk bij
         s->setPos(targetPos);
 
 
@@ -170,37 +153,31 @@ bool Game::move(SchaakStuk* s, int r, int k) {
 void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk* selected,
                                  pair<int, int> selectionPos) {
     zw oppkleur = wit; if (selected->getKleur()==wit) oppkleur = zwart;
-    vector<pair<int,int>> pieces_in_vision = piecesInVision(oppkleur);
-
+    vector<pair<int,int>> threateneds = piecesInVision(oppkleur);
     if (selected->getNaam()==pion &&
         abs(clickedPos.first - myPosition.first)==2) {
-        // EP square is the square behind the pawn
         if (whiteToMove()) enPassantSquare = pair<int,int>(clickedPos.first - 1, clickedPos.second);
         else if (!whiteToMove()) enPassantSquare = pair<int,int>(clickedPos.first + 1, clickedPos.second);
         enPassantTargetPos=pair<int,int>(selected->getPos().first, selected->getPos().second);
         SchaakStuk* epTargetPiece = getPiece(enPassantTargetPos.first, enPassantTargetPos.second);
 
-        // make sure the enPassantTargetPos will be marked as 'piece threat' (see bottom of func)
-        // check if this pawn landed next to an enemy pawn -> this pawn is threatened because of ep
+
         SchaakStuk* leftSquare = getPiece(enPassantTargetPos.first, enPassantTargetPos.second - 1);    // square to the left of enPassantTargetPos
         SchaakStuk* rightSquare = getPiece(enPassantTargetPos.first, enPassantTargetPos.second + 1);    // square to the right of enPassantTargetPos
 
         if (leftSquare != nullptr &&
             leftSquare->getNaam() == pion &&
             leftSquare->getKleur() != epTargetPiece->getKleur()) {
-            pieces_in_vision.push_back(enPassantTargetPos);}
+            threateneds.push_back(enPassantTargetPos);}
         if (rightSquare != nullptr &&
             rightSquare->getNaam() == pion &&
             rightSquare->getKleur() != epTargetPiece->getKleur()) {
-            pieces_in_vision.push_back(enPassantTargetPos);}
+            threateneds.push_back(enPassantTargetPos);}
 
 
     }
     else {
         enPassantSquare = pair<int, int>(-1, -1); // reset
-
-        // initialise pieces_in_vision vector with its default values
-        // this is for the 'piece threat' tile marks to work ()
     }
 }
 
@@ -219,7 +196,6 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
     vector<pair<int, int>> zetten = king->validMoves(*this);
     auto it = find(zetten.begin(), zetten.end(), pos);
 
-    // move the king
     if (it != zetten.end()) {
         setPiece(pos.first,pos.second,king);
 
@@ -229,7 +205,6 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
 
     }
 
-    // move rook:
     SchaakStuk* rook = nullptr;
     for (auto p : getActivePieces()) {
         pair<int,int> q = p->getPos();
@@ -261,26 +236,26 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
 
 
 bool Game::fakeMove(SchaakStuk* s, int r, int k) {
-    if (s == nullptr) {
-        return false;
-    }
+        if (s == nullptr) {
+            return false;
+        }
 
-    if (r < 0 || r > 7 || k < 0 || k > 7 ) {
-        return false;
-    }
+        if (r < 0 || r > 7 || k < 0 || k > 7 ) {
+            return false;
+        }
 
-    auto myPos = s->getPos();
-    pair<int, int> targetPos(r, k);
+        auto myPos = s->getPos();
+        pair<int, int> targetPos(r, k);
 
-    if (getPiece(r,k)!=nullptr) tempCapturedPiece= getPiece(r, k);
-    setPiece(r,k,s);
-    setPiece(myPos.first, myPos.second, nullptr);
+        if (getPiece(r,k)!=nullptr) tempCapturedPiece= getPiece(r, k);
+        setPiece(r,k,s);
+        setPiece(myPos.first, myPos.second, nullptr);
 
 
-    if (tempCapturedPiece != nullptr && fakeMoveMade) setPiece(myPos.first, myPos.second, tempCapturedPiece);
-    s->setPos(targetPos);
+        if (tempCapturedPiece != nullptr && fakeMoveMade) setPiece(myPos.first, myPos.second, tempCapturedPiece);
+        s->setPos(targetPos);
 
-    return true;
+        return true;
 
 }
 
@@ -355,7 +330,6 @@ void Game::setPiece(int r, int k, SchaakStuk* s)
 }
 
 vector<SchaakStuk *> Game::getActivePieces() const {
-    // Returns vector containing all the pieces still on the board
     vector<SchaakStuk*> result;
     for (int i=0; i<8; i++) {
         for (int j=0; j<8; j++) {
@@ -477,7 +451,7 @@ vector<pair<int, int>> Game::controlledSquares(zw kleur) {
         } else {
             vector<pair<int,int>> v = p->validMoves(*this);
             result.insert(result.end(), v.begin(), v.end());
-        }
+       }
     }
     return result;
 }
@@ -503,3 +477,5 @@ zw Game::colorToMove() const {
 bool Game::whiteToMove() const {
     return (moveCount%2==0);
 }
+
+
