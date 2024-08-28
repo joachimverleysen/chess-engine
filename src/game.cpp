@@ -93,14 +93,14 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     pair<int, int> targetPos(r, k);
 
     // check if the move is En Passant
-    bool ep = true;
-    if (s->getNaam()!=pion) ep = false;
-    if (enPassantSquare.first == -1) ep = false;    // ep not possible since no available ep square
-    if (myPos.second==k) ep = false;    // ep is a diagonal move so column indices must be different
-    if (getPiece(r, k)!=nullptr) ep = false; // EP means the pawn should go to an empty square
-    if (targetPos != enPassantSquare) ep = false;
-    if (enPassantTargetPos.first == -1) ep = false;   // invalid enPassantTargetPos (-1 = default value)
-    if (ep) {
+    bool enpassant = true;
+    if (s->getNaam()!=pion) enpassant = false;
+    if (enPassantSquare.first == -1) enpassant = false;    // enpassant not possible since no available enpassant square
+    if (myPos.second==k) enpassant = false;    // enpassant is a diagonal move so column indices must be different
+    if (getPiece(r, k)!=nullptr) enpassant = false; // EP means the pawn should go to an empty square
+    if (targetPos != enPassantSquare) enpassant = false;
+    if (enPassantTargetPos.first == -1) enpassant = false;   // invalid enPassantTargetPos (-1 = default value)
+    if (enpassant) {
         setPiece(targetPos.first, targetPos.second, s); // move the pawn to epSquare
         s->setPos(targetPos);   // update pawn's position
         setPiece(myPos.first, myPos.second, nullptr);   // clear original square
@@ -110,16 +110,16 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         enPassantTargetPos = pair<int,int>(-1, -1);    // default value
         enPassantSquare = pair<int,int>(-1,-1);
 
-        pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr, pair<int, int>(-1, -1));
-        castling_rook_stack.push_back(castling_rook);
+        pair<SchaakStuk*, pair<int, int>> castling_rook_piece(nullptr, pair<int, int>(-1, -1));
+        castling_rook_stack.push_back(castling_rook_piece);
         return true;
     }
     // check if the move is castling:
     if (s->getNaam()==koning &&
     abs(myPos.second-k)>1) {
-        auto castling_rook = getCastlingRook(targetPos, s);
-        pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook,
-                                                        castling_rook->getPos());
+        auto castling_rook_piece = getCastlingRook(targetPos, s);
+        pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook_piece,
+                                                             castling_rook_piece->getPos());
         castling_rook_stack.push_back(castling_rook_pair);// check if distance between king and selectedPos is more then 1 ->castle
         if (k>myPos.second && kingSideCastleIsValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);
         else if (k<myPos.second && queenSideCastleIsValid(s->getKleur())) executeCastle(s->getKleur(), targetPos);

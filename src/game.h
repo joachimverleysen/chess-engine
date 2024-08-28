@@ -10,16 +10,33 @@
 
 class SchaakStuk;
 
+typedef pair<SchaakStuk*, pair<int, int>> ActivePiece;
+struct CastlingRook {
+    SchaakStuk* piece;
+    pair<int, int> position;
+};
 struct GameStack {
     vector<SchaakStuk*> last_piece;
     vector<SchaakStuk*> captured_piece;
     vector<pair<int, int>> previous_position;
+    vector<CastlingRook> castling_rook;
+
 
     void push(SchaakStuk* last, SchaakStuk* captured, pair<int, int> previous_pos) {
         last_piece.push_back(last);
         captured_piece.push_back(captured);
         previous_position.push_back(previous_pos);
     }
+    void push(SchaakStuk* last, SchaakStuk* captured, pair<int, int> previous_pos, CastlingRook& rook) {
+        last_piece.push_back(last);
+        captured_piece.push_back(captured);
+        previous_position.push_back(previous_pos);
+        castling_rook.push_back(rook);
+    }
+    void pushCastlingRook(CastlingRook& rook) {
+        castling_rook.push_back(rook);
+    }
+
 
     void pop() {
         last_piece.pop_back();
