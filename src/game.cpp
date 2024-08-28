@@ -342,14 +342,11 @@ vector<SchaakStuk *> Game::getActivePieces() const {
 };
 
 bool Game::kingSideCastleIsValid(zw kleur) {
-
-
-    if (kleur==zwart && blackKingMoved) return false;
-    if (kleur==wit && whiteKingMoved) return false;
+    if (kleur==zwart && firstBlackKingMove!=-1) return false;
+    if (kleur==wit && firstWhiteKingMove!=-1) return false;
     if (schaak(kleur)) return false;
     pair<int,int> kingPos = findKing(kleur);
 
-    bool valid = true;
     for (int i=1; i<=2; i++) {
         pair<int,int> square(kingPos.first, kingPos.second+i);
         if (getPiece(square.first, square.second)!=nullptr) return false;

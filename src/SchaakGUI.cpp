@@ -110,20 +110,30 @@ void SchaakGUI::clicked(int r, int k) {
 }
 
 void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> current_pos, const vector<pair<int, int>> &validMoves) {
-    g.moveCount++;
     CastlingRook castlingRook(nullptr, pair<int, int>());
     g.undoStack.push(selectedPiece, clickedItem, selectionPos);
     g.redoStack.push(nullptr, clickedItem, selectionPos);
 
     if (selectedPiece->getNaam()==pion &&
-        (clickedPos.first==0 || clickedPos.first==7))
+        (clickedPos.first==0 || clickedPos.first==7)) {
         g.promote(clickedPos.first, clickedPos.second);
+    }
+
+    if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit &&
+    g.firstWhiteKingMove==-1) {
+        g.firstWhiteKingMove = g.moveCount;
+    }
+    if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==zwart &&
+        g.firstBlackKingMove==-1) {
+        g.firstBlackKingMove = g.moveCount;
+    }
 
     g.updateEnPassantTarget(clickedPos, current_pos, selectedPiece, selectionPos);
     if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==zwart) g.blackKingMoved=true;
     else if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit) g.whiteKingMoved=true;
 
     pieceSelected=false;
+    g.moveCount++;
     updateMarking();
 
 }
@@ -210,6 +220,17 @@ void SchaakGUI::undo() {
             else g.blackKingMoved = false;
             g.redoStack.pushCastlingRook(castling_rook);
             update();
+        }
+
+        if (piece->getNaam()==koning) {
+            if (piece->getKleur()==wit && g.firstWhiteKingMove==g.moveCount-1) {
+                g.firstWhiteKingMove = -1;
+            }
+        }
+        if (piece->getNaam()==koning) {
+            if (piece->getKleur()==zwart && g.firstBlackKingMove==g.moveCount-1) {
+                g.firstBlackKingMove = -1;
+            }
         }
 
         g.undoStack.pop();
