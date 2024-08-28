@@ -19,7 +19,7 @@ vector<pair<int, int>> SchaakStuk::validMoves(Game &game) {
 
     for (auto p : mogelijke_zetten(game)) {
         if (testSelfCheck(game, p.first, p.second)) continue;
-        result.push_back(p);   // position is legal -> add to result
+        result.push_back(p);
 
     }
     if (this->getNaam()==koning) {
@@ -42,22 +42,20 @@ bool SchaakStuk::testSelfCheck(Game &g, int r, int k) {
     pair<int,int> myPos = getPos();
     g.fakeMove(this, r, k);
     g.fakeMoveMade=true;
-    if (g.schaak(getKleur())) {  // player tried to put himself in check
+    if (g.schaak(getKleur())) {
         // UNDO FAKE MOVE:
-        g.fakeMove(this, myPos.first, myPos.second); // move the piece back to myPos
-        g.fakeMoveMade=false; // fake move is undone -> var back to false
-        g.tempCapturedPiece=nullptr; // resetting purposes
+        g.fakeMove(this, myPos.first, myPos.second);
+        g.fakeMoveMade=false;
+        g.tempCapturedPiece=nullptr;
         return true;
-        // pieceSelected remains true since there hasn't been made a valid move
     }
     // UNDO FAKE MOVE:
-    g.fakeMove(this, myPos.first, myPos.second); // move the piece back to myPos
-    g.fakeMoveMade=false; // fake move is undone -> var back to false
-    g.tempCapturedPiece=nullptr; // resetting purposes
+    g.fakeMove(this, myPos.first, myPos.second);
+    g.fakeMoveMade=false;
+    g.tempCapturedPiece=nullptr;
 
 
     return false;
-    // Note: movecount (int) and turn (bool) are not updated here
 }
 void SchaakStuk::setPos(pair<int, int> pos) {
     SchaakStuk::position = pos;
@@ -67,9 +65,9 @@ vector<pair<int, int>> SchaakStuk::attackingSquares(Game &game) {
     // Returns vector with postitions that are attacked by this piece
     vector<pair<int,int>> result;
 
-    for (auto po : mogelijke_zetten(game)) { // Loop through the squares that are in vision of the piece
-        if (game.getPiece(po.first, po.second) != nullptr) { // Opponent's piece in vision
-            result.emplace_back(po.first, po.second); // Push position to result
+    for (auto pos : mogelijke_zetten(game)) {
+        if (game.getPiece(pos.first, pos.second) != nullptr) { // Opponent's piece in vision
+            result.emplace_back(pos.first, pos.second); // Push position to result
         }
     }
 
@@ -85,19 +83,16 @@ bool inRange(pair<int, int> &pos) {
     pos.second >=0 && pos.second <8;
 }
 vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
-    // ignores check, checkmate...
 
     vector<pair<int, int>> result;
 
-    pair<int,int> myPos(getPos());      // Initialize var with position
+    pair<int,int> myPos(getPos());
 
-    // initialize positions for black
-    pair<int,int> diagL(myPos.first+1, myPos.second+1); // square in front left
-    pair<int,int> diagR(myPos.first+1, myPos.second-1); // square in front right
-    pair<int,int> front(myPos.first+1, myPos.second);   // square in front
-    pair<int,int> front_2(myPos.first+2, myPos.second);   // 2 squares in front
+    pair<int,int> diagL(myPos.first+1, myPos.second+1);
+    pair<int,int> diagR(myPos.first+1, myPos.second-1);
+    pair<int,int> front(myPos.first+1, myPos.second);
+    pair<int,int> front_2(myPos.first+2, myPos.second);
 
-    // redefine the positions if it is white's turn
     if (getKleur()==wit) {
 
         diagL.first = myPos.first - 1;
@@ -110,14 +105,12 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
 
         front_2.first = myPos.first - 2;
     }
-    // Check for En Passant
     if (diagL == game.enPassantSquare) result.push_back(diagL);
     if (diagR == game.enPassantSquare) result.push_back((diagR));
-    // Check if the square in front is empty
+
     if (game.getPiece(front.first, front.second) == nullptr) {
         result.push_back(front);
 
-        // If on starting position, check if the 2 squares in front are also empty
         if ((myPos.first == 1 && this->getKleur()==zwart) && game.getPiece(front_2.first, front_2.second) == nullptr) {
             result.push_back(front_2);
         }
@@ -126,14 +119,11 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
         }
     }
 
-
-    // Check if the diagonally left square has an opponent's piece
     if (inRange(diagL) && game.getPiece(diagL.first, diagL.second) != nullptr &&
             game.getPiece(diagL.first, diagL.second)->getKleur() != this->getKleur()) {
         result.push_back(diagL);
     }
 
-    // Check if the diagonally right square has an opponent's piece
     if (inRange(diagR) && game.getPiece(diagR.first, diagR.second) != nullptr &&
             game.getPiece(diagR.first, diagR.second)->getKleur() != this->getKleur()) {
         result.push_back(diagR);
@@ -152,15 +142,14 @@ vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van 
 
     for (int i = 1; myPos.first + i < 8 && myPos.second + i < 8; i++) {
         SchaakStuk* square = game.getPiece(myPos.first + i, myPos.second + i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first + i, myPos.second + i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the bishop's way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
 
@@ -168,48 +157,44 @@ vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van 
     }
     for (int i = 1; myPos.first + i < 8 && myPos.second - i >= 0; i++) {
         SchaakStuk* square = game.getPiece(myPos.first+i, myPos.second-i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first + i, myPos.second - i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the bishop's way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
         result.emplace_back(myPos.first + i, myPos.second - i);
     }
     for (int i = 1; myPos.first - i >= 0 && myPos.second + i < 8; i++) {
         SchaakStuk* square = game.getPiece(myPos.first-i, myPos.second+i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first - i, myPos.second + i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the bishop's way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves in this direction
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
         result.emplace_back(myPos.first - i, myPos.second + i);
     }
     for (int i = 1; myPos.first - i >= 0 && myPos.second - i >= 0; i++) {
         SchaakStuk* square = game.getPiece(myPos.first-i, myPos.second-i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first - i, myPos.second - i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the bishop's way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
-        // if the square IS empty, the bishop can move here:
         result.emplace_back(myPos.first - i, myPos.second - i);
     }
     return result;
@@ -226,7 +211,7 @@ vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first - i, myPos.second);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first - i, myPos.second);
         }
@@ -239,7 +224,7 @@ vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first + i, myPos.second);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first + i, myPos.second);
         }
@@ -252,7 +237,7 @@ vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first, myPos.second + i);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first, myPos.second + i);
         }
@@ -265,7 +250,7 @@ vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first, myPos.second - i);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first, myPos.second - i);
         }
@@ -278,28 +263,16 @@ vector<pair<int, int>> Koning::mogelijke_zetten(Game &game) {       // met hulp 
     pair<int, int> myPos(getPos());
 
     // check for castle options:
-
-    // Aangrenzende posities
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
-            if (i != 0 || j != 0) {     // cant be both zero (mypos)
+            if (i != 0 || j != 0) {
                 if (myPos.first+i<0 || myPos.first+i>7 || myPos.second+j<0 ||myPos.second+j>7) continue;
-                pair<int,int> p(myPos.first+i, myPos.second+j); // possible valid move
-                bool valid=true;    // checks if a position is a valid move
-                // check if a same-colored piece blocks the way
+                pair<int,int> p(myPos.first+i, myPos.second+j);
                 auto square = game.getPiece(p.first, p.second);
-                if (square != nullptr) { // same colored piece
-                    // if square is a king, we handle this with hulpfunction kingControls
-                    // we must skip it here to avoid segfault:
-//                    if (square->getNaam()==koning) {valid=false; continue;} // skip the 'king' cases to avoid segfault
-                    if (square->getKleur() == this->getKleur()) continue;  // cant capture own color
+                if (square != nullptr) {
+                    if (square->getKleur() == this->getKleur()) continue;
 
                 }
-
-
-                // at this point, position p is an empty square or an enemy piece
-
-                // make sure king doesn't walk into check
                 result.emplace_back(myPos.first+i, myPos.second+j);
 
             }
@@ -316,25 +289,21 @@ vector<pair<int, int>> Paard::mogelijke_zetten(Game &game) {
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
-    // The knight moves (L-shape)
-    int moves[8][2] = {     // Store the moves as arrays in an array
+    int moves[8][2] = {
             {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
             {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
     };
 
-    for (int i = 0; i < 8; ++i) {   // We will loop through the array and check every move
+    for (int i = 0; i < 8; ++i) {
         int newX = myPos.first + moves[i][0];
         int newY = myPos.second + moves[i][1];
 
-        // Check if the new position is within the board boundaries
         if (newX >= 0 && newX < 8 && newY >= 0 && newY < 8) {
             SchaakStuk *square = game.getPiece(newX, newY);
 
-            // Check if the square is empty or has an opponent's piece
             if (square == nullptr || square->getKleur() != this->getKleur()) {
                 result.emplace_back(newX, newY);
             }
-            // Otherwise, the square has a piece of the same color, so it can't be captured
         }
     }
 
@@ -345,7 +314,6 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
-    // We simply combine the rook+bishop method to implement the queen
 
     // Moving upwards
     for (int i = 1; myPos.first - i >= 0; i++) {
@@ -354,7 +322,7 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first - i, myPos.second);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first - i, myPos.second);
         }
@@ -367,7 +335,7 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first + i, myPos.second);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first + i, myPos.second);
         }
@@ -380,7 +348,7 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first, myPos.second + i);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first, myPos.second + i);
         }
@@ -393,7 +361,7 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
             if (square->getKleur() != this->getKleur()) {
                 result.emplace_back(myPos.first, myPos.second - i);
             }
-            break; // Stop further moves in this direction
+            break;
         } else {
             result.emplace_back(myPos.first, myPos.second - i);
         }
@@ -402,15 +370,14 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
 
     for (int i = 1; myPos.first + i < 8 && myPos.second + i < 8; i++) {
         SchaakStuk* square = game.getPiece(myPos.first + i, myPos.second + i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first + i, myPos.second + i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the  way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
 
@@ -418,51 +385,45 @@ vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
     }
     for (int i = 1; myPos.first + i < 8 && myPos.second - i >= 0; i++) {
         SchaakStuk* square = game.getPiece(myPos.first+i, myPos.second-i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first + i, myPos.second - i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
         result.emplace_back(myPos.first + i, myPos.second - i);
     }
     for (int i = 1; myPos.first - i >= 0 && myPos.second + i < 8; i++) {
         SchaakStuk* square = game.getPiece(myPos.first-i, myPos.second+i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first - i, myPos.second + i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves in this direction
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
         result.emplace_back(myPos.first - i, myPos.second + i);
     }
     for (int i = 1; myPos.first - i >= 0 && myPos.second - i >= 0; i++) {
         SchaakStuk* square = game.getPiece(myPos.first-i, myPos.second-i);
-        if (square != nullptr){   // square not empty
-            if (square->getKleur()!=this->getKleur()) {     // piece is from opponent -> can be captured
+        if (square != nullptr){
+            if (square->getKleur()!=this->getKleur()) {
                 result.emplace_back(myPos.first - i, myPos.second - i);
-                break; // no further moves available in this direction
+                break;
             }
 
-            else if (square->getKleur()==this->getKleur()) {       // same-colored piece: can't be captured!
-                // same-colored piece stands in the way. No further moves in this direction are available
-                break;  // jump out of this loop as no more available moves
+            else if (square->getKleur()==this->getKleur()) {
+                break;
             }
         }
-        // if the square IS empty, the bishop can move here:
         result.emplace_back(myPos.first - i, myPos.second - i);
     }
     return result;
 }
-
-
