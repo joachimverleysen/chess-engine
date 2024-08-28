@@ -120,7 +120,7 @@ bool Game::move(SchaakStuk* s, int r, int k) {
     }
     // check if the move is castling:
     if (s->getNaam()==koning &&
-    abs(myPos.second-k)>1) {
+        abs(myPos.second-k)>1) {
         auto castling_rook_piece = getCastlingRook(targetPos, s);
         pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook_piece,
                                                              castling_rook_piece->getPos());
@@ -260,26 +260,26 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
 
 
 bool Game::fakeMove(SchaakStuk* s, int r, int k) {
-        if (s == nullptr) {
-            return false;
-        }
+    if (s == nullptr) {
+        return false;
+    }
 
-        if (r < 0 || r > 7 || k < 0 || k > 7 ) {
-            return false;
-        }
+    if (r < 0 || r > 7 || k < 0 || k > 7 ) {
+        return false;
+    }
 
-        auto myPos = s->getPos();
-        pair<int, int> targetPos(r, k);
+    auto myPos = s->getPos();
+    pair<int, int> targetPos(r, k);
 
-        if (getPiece(r,k)!=nullptr) tempCapturedPiece= getPiece(r, k);
-        setPiece(r,k,s);
-        setPiece(myPos.first, myPos.second, nullptr);
+    if (getPiece(r,k)!=nullptr) tempCapturedPiece= getPiece(r, k);
+    setPiece(r,k,s);
+    setPiece(myPos.first, myPos.second, nullptr);
 
 
-        if (tempCapturedPiece != nullptr && fakeMoveMade) setPiece(myPos.first, myPos.second, tempCapturedPiece);
-        s->setPos(targetPos);
+    if (tempCapturedPiece != nullptr && fakeMoveMade) setPiece(myPos.first, myPos.second, tempCapturedPiece);
+    s->setPos(targetPos);
 
-        return true;
+    return true;
 
 }
 
@@ -476,7 +476,7 @@ vector<pair<int, int>> Game::controlledSquares(zw kleur) {
         } else {
             vector<pair<int,int>> v = p->validMoves(*this);
             result.insert(result.end(), v.begin(), v.end());
-       }
+        }
     }
     return result;
 }
@@ -502,5 +502,3 @@ zw Game::colorToMove() const {
 bool Game::whiteToMove() const {
     return (moveCount%2==0);
 }
-
-

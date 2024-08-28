@@ -48,7 +48,6 @@ struct GameStack {
         last_piece.pop_back();
         captured_piece.pop_back();
         previous_position.pop_back();
-        castling_rook.pop_back();
     }
 
     void clear() {
@@ -126,5 +125,3 @@ public:
 };
 
 #endif //SCHAKEN_GAME_H
-
-
