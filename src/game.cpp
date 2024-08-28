@@ -170,7 +170,8 @@ bool Game::move(SchaakStuk* s, int r, int k) {
 void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk* selected,
                                  pair<int, int> selectionPos) {
     zw oppkleur = wit; if (selected->getKleur()==wit) oppkleur = zwart;
-    vector<pair<int,int>> threateneds = piecesInVision(oppkleur);
+    vector<pair<int,int>> pieces_in_vision = piecesInVision(oppkleur);
+
     if (selected->getNaam()==pion &&
         abs(clickedPos.first - myPosition.first)==2) {
         // EP square is the square behind the pawn
@@ -187,18 +188,18 @@ void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPos
         if (leftSquare != nullptr &&
             leftSquare->getNaam() == pion &&
             leftSquare->getKleur() != epTargetPiece->getKleur()) {
-            threateneds.push_back(enPassantTargetPos);}
+            pieces_in_vision.push_back(enPassantTargetPos);}
         if (rightSquare != nullptr &&
             rightSquare->getNaam() == pion &&
             rightSquare->getKleur() != epTargetPiece->getKleur()) {
-            threateneds.push_back(enPassantTargetPos);}
+            pieces_in_vision.push_back(enPassantTargetPos);}
 
 
     }
     else {
         enPassantSquare = pair<int, int>(-1, -1); // reset
 
-        // initialise threateneds vector with its default values
+        // initialise pieces_in_vision vector with its default values
         // this is for the 'piece threat' tile marks to work ()
     }
 }

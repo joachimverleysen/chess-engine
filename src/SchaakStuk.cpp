@@ -105,8 +105,24 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
 
         front_2.first = myPos.first - 2;
     }
-    if (diagL == game.enPassantSquare) result.push_back(diagL);
-    if (diagR == game.enPassantSquare) result.push_back((diagR));
+    if (diagL == game.enPassantSquare &&
+    game.enPassantTargetPos.first != -1 &&
+    game.getPiece(game.enPassantTargetPos.first, game.enPassantTargetPos.second) != nullptr) {
+        if (game.getPiece(game.enPassantTargetPos.first, game.enPassantTargetPos.second)->getKleur() !=
+           this->getKleur()) {
+            result.push_back(diagL);
+
+        }
+    }
+    if (diagR == game.enPassantSquare &&
+    game.enPassantTargetPos.first != -1 &&
+    game.getPiece(game.enPassantTargetPos.first, game.enPassantTargetPos.second) != nullptr) {
+        if (game.getPiece(game.enPassantTargetPos.first, game.enPassantTargetPos.second)->getKleur() !=
+            this->getKleur()) {
+            result.push_back(diagR);
+
+        }
+    }
 
     if (game.getPiece(front.first, front.second) == nullptr) {
         result.push_back(front);
