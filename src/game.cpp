@@ -5,7 +5,6 @@
 
 #include "game.h"
 #include <algorithm>
-#include <iostream>
 #include <random>     // voor std::default_random_engine en std::random_device
 
 #include "SchaakStuk.h"
@@ -127,7 +126,6 @@ bool Game::move(SchaakStuk* s, int r, int k) {
 
         return true;
     }
-    pair<SchaakStuk*, pair<int, int>> castling_rook(nullptr,pair<int, int>(-1, -1));
 
     if (r < 0 || r > 7 || k < 0 || k > 7 ) {
         return false;
@@ -365,7 +363,7 @@ bool Game::kingSideCastleIsValid(zw kleur) {
 void Game::promote(int r, int k) {
     zw color = getPiece(r, k)->getKleur();
     pair<int,int> newPos(r, k);
-    Koningin* q = new Koningin(color, newPos);
+    auto* q = new Koningin(color, newPos);
     setPiece(r, k, q);
 }
 

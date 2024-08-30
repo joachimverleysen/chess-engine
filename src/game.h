@@ -6,32 +6,32 @@
 #ifndef SCHAAK_GAME_H
 #define SCHAAK_GAME_H
 
+#include <utility>
+
 #include "SchaakStuk.h"
 
 class SchaakStuk;
-
-typedef pair<SchaakStuk*, pair<int, int>> ActivePiece;
 
 struct CastlingRook {
     SchaakStuk* piece;
     pair<int, int> position;
     CastlingRook() {piece=nullptr; position = pair<int,int>(-1,-1);}
-    CastlingRook(SchaakStuk* piece, pair<int, int> position) : piece(piece), position(position){};
+    CastlingRook(SchaakStuk* piece, pair<int, int> position) : piece(piece), position(std::move(position)){};
 };
 struct GameStack {
-    vector<SchaakStuk*> last_piece;
+    vector<SchaakStuk*> moving_piece;
     vector<SchaakStuk*> captured_piece;
     vector<pair<int, int>> previous_position;
     vector<CastlingRook> castling_rook;
 
 
     void push(SchaakStuk* last, SchaakStuk* captured, pair<int, int> previous_pos) {
-        last_piece.push_back(last);
+        moving_piece.push_back(last);
         captured_piece.push_back(captured);
         previous_position.push_back(previous_pos);
     }
     void push(SchaakStuk* last, SchaakStuk* captured, pair<int, int> previous_pos, CastlingRook& rook) {
-        last_piece.push_back(last);
+        moving_piece.push_back(last);
         captured_piece.push_back(captured);
         previous_position.push_back(previous_pos);
         castling_rook.push_back(rook);
@@ -45,17 +45,11 @@ struct GameStack {
 
 
     void pop() {
-        last_piece.pop_back();
+        moving_piece.pop_back();
         captured_piece.pop_back();
         previous_position.pop_back();
     }
 
-    void clear() {
-        last_piece.clear();
-        captured_piece.clear();
-        previous_position.clear();
-        castling_rook.pop_back();
-    }
 };
 
 class Game {
@@ -107,9 +101,6 @@ public:
     bool fakeMoveMade=false;
 
     SchaakStuk* tempCapturedPiece=nullptr;
-
-    bool aiFakeMoveMade=false;
-    SchaakStuk* tempPiece_2 = nullptr;
 
 
     bool kingSideCastleIsValid(zw kleur);

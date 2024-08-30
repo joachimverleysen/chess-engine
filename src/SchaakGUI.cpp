@@ -103,13 +103,13 @@ void SchaakGUI::clicked(int r, int k) {
     if (it != validMoves.end()) {
         g.move(selectedPiece, clickedPos.first, clickedPos.second);
         removeAllMarking();
-        updateGameInfo(clickedPos, activePiecePosition, validMoves);
+        updateGameInfo(clickedPos, activePiecePosition);
 
     }
     update();
 }
 
-void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> current_pos, const vector<pair<int, int>> &validMoves) {
+void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> current_pos) {
     g.undoStack.push(selectedPiece, clickedItem, selectionPos);
     g.redoStack.push(nullptr, clickedItem, selectionPos);
 
@@ -200,7 +200,7 @@ void SchaakGUI::undo() {
 
         if (g.undoStack.previous_position.empty()) return;
         pair<int, int> previous_position = g.undoStack.previous_position.back();
-        SchaakStuk *piece = g.undoStack.last_piece.back();
+        SchaakStuk *piece = g.undoStack.moving_piece.back();
         pair<int, int> current_position(piece->getPos());
 
         auto captured = g.undoStack.captured_piece.back();
@@ -249,11 +249,11 @@ void SchaakGUI::undo() {
 void SchaakGUI::redo() {
     message("REDO");
 
-    if (g.redoStack.last_piece.empty()) return;
-    if (g.redoStack.last_piece.back()== nullptr) return;
+    if (g.redoStack.moving_piece.empty()) return;
+    if (g.redoStack.moving_piece.back() == nullptr) return;
 
     pair<int,int> previous_position = g.redoStack.previous_position.back();
-    SchaakStuk* piece = g.redoStack.last_piece.back();
+    SchaakStuk* piece = g.redoStack.moving_piece.back();
     pair<int,int> current_position(piece->getPos());
 
     auto captured = g.getPiece(previous_position.first, previous_position.second);
@@ -280,14 +280,10 @@ void SchaakGUI::redo() {
 
     }
 
-
-
     g.redoStack.pop();
     g.undoStack.push(piece, captured, current_position, castlingRook);
 
-
-
-    g.moveCount++; // increment movecount
+    g.moveCount++;
 }
 
 
