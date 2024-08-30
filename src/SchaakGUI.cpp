@@ -136,7 +136,7 @@ void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, 
         g.firstBlackKingMove = g.moveCount;
     }
 
-    g.updateEnPassantTarget(clickedPos, current_pos, selectedPiece, selectionPos);
+    g.updateEnPassantTarget(clickedPos, current_pos, selectedPiece);
     if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==zwart) g.blackKingMoved=true;
     else if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit) g.whiteKingMoved=true;
 

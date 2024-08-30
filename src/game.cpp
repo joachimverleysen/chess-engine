@@ -153,10 +153,9 @@ bool Game::move(SchaakStuk* piece, int row, int col) {
 }
 
 
-void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk* selected,
-                                 pair<int, int> selectionPos) {
+void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected) {
     zw oppkleur = wit; if (selected->getKleur()==wit) oppkleur = zwart;
-    vector<pair<int,int>> threateneds = piecesInVision(oppkleur);
+    vector<pair<int,int>> pieces_in_vision = piecesInVision(oppkleur);
     if (selected->getNaam()==pion &&
         abs(clickedPos.first - myPosition.first)==2) {
         if (whiteToMove()) enPassantSquare = pair<int,int>(clickedPos.first - 1, clickedPos.second);
@@ -164,18 +163,17 @@ void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPos
         enPassantTargetPos=pair<int,int>(selected->getPos().first, selected->getPos().second);
         SchaakStuk* epTargetPiece = getPiece(enPassantTargetPos.first, enPassantTargetPos.second);
 
-
         SchaakStuk* leftSquare = getPiece(enPassantTargetPos.first, enPassantTargetPos.second - 1);    // square to the left of enPassantTargetPos
         SchaakStuk* rightSquare = getPiece(enPassantTargetPos.first, enPassantTargetPos.second + 1);    // square to the right of enPassantTargetPos
 
         if (leftSquare != nullptr &&
             leftSquare->getNaam() == pion &&
             leftSquare->getKleur() != epTargetPiece->getKleur()) {
-            threateneds.push_back(enPassantTargetPos);}
+            pieces_in_vision.push_back(enPassantTargetPos);}
         if (rightSquare != nullptr &&
             rightSquare->getNaam() == pion &&
             rightSquare->getKleur() != epTargetPiece->getKleur()) {
-            threateneds.push_back(enPassantTargetPos);}
+            pieces_in_vision.push_back(enPassantTargetPos);}
 
 
     }

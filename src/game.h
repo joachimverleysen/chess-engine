@@ -115,8 +115,7 @@ public:
 
     SchaakStuk *getCastlingRook(pair<int, int> king_target_pos, SchaakStuk *king) const;
 
-    void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected,
-                               pair<int, int> selectionPos);
+    void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected);
 
     void movePiece(SchaakStuk *piece, int row, int col);
 
