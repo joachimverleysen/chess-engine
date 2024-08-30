@@ -196,15 +196,11 @@ void Game::executeCastle(zw kleur, pair<int, int> king_target_pos) {
     vector<pair<int, int>> zetten = king->validMoves(*this);
     auto it = find(zetten.begin(), zetten.end(), king_target_pos);
     SchaakStuk* rook = getCastlingRook(king_target_pos, king);
+    if (rook == nullptr) return;
 
     if (it != zetten.end()) {
-        setPiece(king_target_pos.first, king_target_pos.second, king);
-        setPiece(kingPos.first, kingPos.second, nullptr);
-        king->setPos(king_target_pos);
-
+        movePiece(king, king_target_pos.first, king_target_pos.second);
     }
-
-    if (rook == nullptr) return;
 
     auto castling_rook_piece =
             rook;
