@@ -154,8 +154,6 @@ vector<pair<int, int>> Loper::possible_moves(Game &game) {    // met hulp van Ch
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
-
-
     for (int i = 1; myPos.first + i < 8 && myPos.second + i < 8; i++) {
         SchaakStuk* square = game.getPiece(myPos.first + i, myPos.second + i);
         if (square != nullptr){
