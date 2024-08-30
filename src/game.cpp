@@ -349,10 +349,8 @@ void Game::promote(int r, int k) {
 
 
 bool Game::queenSideCastleIsValid(zw kleur) const {
-
-
-    if (kleur==zwart && blackKingMoved) return false;
-    if (kleur==wit && whiteKingMoved) return false;
+    if (kleur==zwart && firstBlackKingMove!=-1) return false;
+    if (kleur==wit && (firstWhiteKingMove!=-1)) return false;
     if (schaak(kleur)) return false;
     pair<int,int> kingPos = findKing(kleur);
 

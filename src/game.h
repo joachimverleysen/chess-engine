@@ -81,8 +81,7 @@ public:
     vector<SchaakStuk*> getActivePieces() const;
     bool fakeMove(SchaakStuk *s, int r, int k);
     vector<pair<int, int>> kingControls(zw kleur) const;
-    bool whiteKingMoved=false;
-    bool blackKingMoved=false;
+
     int firstWhiteKingMove=-1;
     int firstBlackKingMove=-1;
 
