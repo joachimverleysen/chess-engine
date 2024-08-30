@@ -86,15 +86,12 @@ public:
     int firstWhiteKingMove=-1;
     int firstBlackKingMove=-1;
 
-    pair<SchaakStuk*, pair<int, int>> castling_rook;
-
-
     GameStack undoStack;
     GameStack redoStack;
 
     vector<pair<SchaakStuk*, pair<int, int>>> castling_rook_stack;
 
-    pair<int,int> enPassantSquare = pair<int,int>(-1,-1);
+    pair<int,int> enPassantSquare = pair<int,int>();
     pair<int,int> enPassantTargetPos = pair<int,int>(-1, -1);
     vector<pair<SchaakStuk*, pair<int, int>>> rd_castling_rook_stack;
 
@@ -105,7 +102,7 @@ public:
 
     bool kingSideCastleIsValid(zw kleur) const;
 
-    void executeCastle(zw kleur, pair<int, int> pos);
+    void executeCastle(zw kleur, pair<int, int> king_target_pos);
 
     bool queenSideCastleIsValid(zw kleur) const;
 
