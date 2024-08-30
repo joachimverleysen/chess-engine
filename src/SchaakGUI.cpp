@@ -110,6 +110,8 @@ void SchaakGUI::clicked(int r, int k) {
 }
 
 void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, int> current_pos) {
+    g.moveCount++;
+
     g.undoStack.push(selectedPiece, clickedItem, selectionPos);
     g.redoStack.push(nullptr, clickedItem, selectionPos);
 
@@ -139,7 +141,6 @@ void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, 
     else if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit) g.whiteKingMoved=true;
 
     pieceSelected=false;
-    g.moveCount++;
     updateMarking();
 
 }

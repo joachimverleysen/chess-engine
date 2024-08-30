@@ -123,6 +123,8 @@ public:
     bool isEnPassantMove(SchaakStuk *piece, pair<int, int> target_position) const;
 
     static bool isCastleMove(SchaakStuk *piece, pair<int, int> target_position) ;
+
+    void executeEnPassant(SchaakStuk *piece, int row, int col);
 };
 
 #endif //SCHAKEN_GAME_H
