@@ -17,7 +17,6 @@ Game::Game() {
 
 Game::~Game() {}
 
-// Zet het bord klaar; voeg de stukken op de jusite plaats toe
 void Game::setStartBord() {
     // Initialize board matrix with nullpointers
     for (int i=0; i<8; i++) {
@@ -85,6 +84,12 @@ SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* ki
 // en verandert er niets aan het schaakbord.
 // Anders wordt de move uitgevoerd en wordt true teruggegeven
 
+void Game::movePiece(int r, int k, SchaakStuk* s, pair<int,int> current_position, pair<int,int> target_position) {
+    setPiece(r,k,s);
+    setPiece(current_position.first, current_position.second, nullptr);
+    s->setPos(target_position);
+}
+
 bool Game::move(SchaakStuk* s, int r, int k) {
 
     if (r < 0 || r > 7 || k < 0 || k > 7 ) {
@@ -136,16 +141,12 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         return true;
     }
 
-
-
     vector<pair<int, int>> possible_moves = s->possible_moves(*this);
     auto it = find(possible_moves.begin(), possible_moves.end(), target_position);
 
     // move piece
     if (it != possible_moves.end()) {
-        setPiece(r,k,s);
-        setPiece(current_position.first, current_position.second, nullptr);
-        s->setPos(target_position);
+        movePiece(r, k, s, current_position, target_position);
         return true;
     }
     return false;
@@ -183,7 +184,7 @@ void Game::updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPos
     }
 }
 
-//todo: undo castle + en passant
+//todo: undo promotion + en passant
 
 void Game::executeCastle(zw kleur, pair<int, int> pos) {
     if (pos.first < 0 || pos.first > 7 || pos.second < 0 || pos.second > 7 ) {
@@ -200,48 +201,41 @@ void Game::executeCastle(zw kleur, pair<int, int> pos) {
 
     if (it != zetten.end()) {
         setPiece(pos.first,pos.second,king);
-
         setPiece(kingPos.first, kingPos.second, nullptr);
-
         king->setPos(pos);
 
     }
 
     SchaakStuk* rook = nullptr;
-    for (auto p : getActivePieces()) {
-        pair<int,int> q = p->getPos();
-        if (p->getKleur()!=kleur || p->getNaam()!=toren) continue;
+    for (auto piece : getActivePieces()) {
+        pair<int,int> q = piece->getPos();
+        if (piece->getKleur() != kleur || piece->getNaam() != toren) continue;
         if (kingside && q.second<kingPos.second) continue;
         if (!kingside && q.second>kingPos.second) continue;
-        rook = p;
+        rook = piece;
     }
+    if (rook == nullptr) return;
+
     pair<int,int> rookPos = rook->getPos();
     castling_rook = {rook, rookPos};
 
-    pair<int,int> newPos(-1,-1);
+    pair<int,int> newPos;
     if (kingside) {
         newPos= pair<int,int>(rookPos.first,rookPos.second-2);
         setPiece(rookPos.first,rookPos.second-2,rook);
     }
-    else if (!kingside) {
+    else {
         newPos= pair<int,int>(rookPos.first,rookPos.second+3);
         setPiece(rookPos.first,rookPos.second+3,rook);
     }
-
-
     setPiece(rookPos.first, rookPos.second, nullptr);
-
-
     if (newPos.first != -1) rook->setPos(newPos);
-
 }
-
 
 bool Game::fakeMove(SchaakStuk* s, int r, int k) {
         if (s == nullptr) {
             return false;
         }
-
         if (r < 0 || r > 7 || k < 0 || k > 7 ) {
             return false;
         }
@@ -253,10 +247,8 @@ bool Game::fakeMove(SchaakStuk* s, int r, int k) {
         setPiece(r,k,s);
         setPiece(myPos.first, myPos.second, nullptr);
 
-
         if (tempCapturedPiece != nullptr && fakeMoveMade) setPiece(myPos.first, myPos.second, tempCapturedPiece);
         s->setPos(targetPos);
-
         return true;
 
 }
@@ -273,7 +265,6 @@ bool Game::schaak(zw kleur) {
             return true;
         }
     }
-
     return false;
 }
 pair<int, int> Game::findKing(zw kleur) const {
@@ -304,7 +295,6 @@ bool Game::schaakmat(zw kleur) {
     return true;
 }
 
-
 bool Game::pat(zw kleur) {
     vector<pair<int, int>> legalMoves;
     if (schaak(kleur)) return false;
@@ -325,7 +315,6 @@ SchaakStuk* Game::getPiece(int r, int k) const {
     return p;
 }
 
-
 void Game::setPiece(int r, int k, SchaakStuk* s)
 {
     schaakbord[r][k] = s;
@@ -337,7 +326,6 @@ vector<SchaakStuk *> Game::getActivePieces() const {
         for (int j=0; j<8; j++) {
             if (getPiece(i, j) == nullptr) continue;
             result.push_back(getPiece(i, j));
-
         }
     }
     return result;
@@ -382,7 +370,6 @@ bool Game::queenSideCastleIsValid(zw kleur) {
     for (int i=1; i<=3; i++) {
         pair<int,int> square(kingPos.first, kingPos.second-i);
         if (getPiece(square.first, square.second)!=nullptr) return false;
-
 
         zw enemyColor = wit;
         if (kleur==wit) enemyColor = zwart;
@@ -476,5 +463,4 @@ zw Game::colorToMove() const {
 bool Game::whiteToMove() const {
     return (moveCount%2==0);
 }
-
 
