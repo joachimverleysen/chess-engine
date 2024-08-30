@@ -86,20 +86,28 @@ SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* ki
 // Anders wordt de move uitgevoerd en wordt true teruggegeven
 
 bool Game::move(SchaakStuk* s, int r, int k) {
-    auto myPos = s->getPos();
-    pair<int, int> targetPos(r, k);
 
+    if (r < 0 || r > 7 || k < 0 || k > 7 ) {
+        return false;
+    }
+
+    auto current_position = s->getPos();
+    pair<int, int> target_position(r, k);
+
+    // check en passant
     bool enpassant = true;
     if (s->getNaam()!=pion) enpassant = false;
     if (enPassantSquare.first == -1) enpassant = false;
-    if (myPos.second==k) enpassant = false;
+    if (current_position.second == k) enpassant = false;
     if (getPiece(r, k)!=nullptr) enpassant = false;
-    if (targetPos != enPassantSquare) enpassant = false;
+    if (target_position != enPassantSquare) enpassant = false;
     if (enPassantTargetPos.first == -1) enpassant = false;
+
+    // do en passant
     if (enpassant) {
-        setPiece(targetPos.first, targetPos.second, s);
-        s->setPos(targetPos);
-        setPiece(myPos.first, myPos.second, nullptr);
+        setPiece(target_position.first, target_position.second, s);
+        s->setPos(target_position);
+        setPiece(current_position.first, current_position.second, nullptr);
         setPiece(enPassantTargetPos.first, enPassantTargetPos.second, nullptr);
 
         enPassantTargetPos = pair<int,int>(-1, -1);
@@ -109,17 +117,18 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         return true;
     }
 
+    // check castle, do castle
     isCastleMove=false;
     if (s->getNaam()==koning &&
-    abs(myPos.second-k)>1) {
-        auto castling_rook_piece = getCastlingRook(targetPos, s);
+        abs(current_position.second - k) > 1) {
+        auto castling_rook_piece = getCastlingRook(target_position, s);
         pair<SchaakStuk*, pair<int, int>> castling_rook_pair(castling_rook_piece,
                                                              castling_rook_piece->getPos());
-        if (k>myPos.second && kingSideCastleIsValid(s->getKleur()) ||
-                k<myPos.second && queenSideCastleIsValid(s->getKleur())) {
+        if (k > current_position.second && kingSideCastleIsValid(s->getKleur()) ||
+            k < current_position.second && queenSideCastleIsValid(s->getKleur())) {
             castlingRook.piece = castling_rook_piece;
             castlingRook.position = castling_rook_piece->getPos();
-            executeCastle(s->getKleur(), targetPos);
+            executeCastle(s->getKleur(), target_position);
             isCastleMove=true;
 
         }
@@ -127,22 +136,16 @@ bool Game::move(SchaakStuk* s, int r, int k) {
         return true;
     }
 
-    if (r < 0 || r > 7 || k < 0 || k > 7 ) {
-        return false;
-    }
-    vector<pair<int, int>> zetten = s->mogelijke_zetten(*this);
-    auto it = find(zetten.begin(), zetten.end(), targetPos);
 
-    if (it != zetten.end()) {
 
+    vector<pair<int, int>> possible_moves = s->possible_moves(*this);
+    auto it = find(possible_moves.begin(), possible_moves.end(), target_position);
+
+    // move piece
+    if (it != possible_moves.end()) {
         setPiece(r,k,s);
-
-
-        setPiece(myPos.first, myPos.second, nullptr);
-
-        s->setPos(targetPos);
-
-
+        setPiece(current_position.first, current_position.second, nullptr);
+        s->setPos(target_position);
         return true;
     }
     return false;

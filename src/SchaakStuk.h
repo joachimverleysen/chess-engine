@@ -27,7 +27,7 @@ public:
     SchaakStuk(zw kleur, pair<int,int> pos=pair<int,int>(-1,-1), pieceName naam=pion) : kleur(kleur) , position(pos), naam(naam){};       // para 'position' initialised with default value (-1,-1)
     virtual ~SchaakStuk() {};
 
-     virtual vector<pair<int,int>> mogelijke_zetten(Game &game) = 0; // pure virtual
+     virtual vector<pair<int,int>> possible_moves(Game &game) = 0; // pure virtual
 
     virtual Piece piece() const=0;      // Verander deze functie niet!
                                         // Deze functie wordt gebruikt door
@@ -69,7 +69,7 @@ public:
         return Piece(Piece::Pawn,getKleur()==wit?Piece::White:Piece::Black);
     }
 
-    vector<pair<int,int>> mogelijke_zetten(Game &game);
+    vector<pair<int,int>> possible_moves(Game &game);
 
 private:
     pieceName naam = pion;
@@ -83,7 +83,7 @@ public:
         return Piece(Piece::Rook, getKleur() == wit ? Piece::White : Piece::Black);
     }
 
-    vector<pair<int, int>> mogelijke_zetten(Game &game);
+    vector<pair<int, int>> possible_moves(Game &game);
 
 private:
     pieceName naam = toren;
@@ -97,7 +97,7 @@ public:
         return Piece(Piece::Knight, getKleur() == wit ? Piece::White : Piece::Black);
     }
 
-    vector<pair<int, int>> mogelijke_zetten(Game &game);
+    vector<pair<int, int>> possible_moves(Game &game);
 
 private:
     pieceName naam = paard;
@@ -111,7 +111,7 @@ public:
         return Piece(Piece::Bishop, getKleur() == wit ? Piece::White : Piece::Black);
     }
 
-    vector<pair<int, int>> mogelijke_zetten(Game &game);
+    vector<pair<int, int>> possible_moves(Game &game);
 
 private:
     pieceName naam = loper;
@@ -125,7 +125,7 @@ public:
         return Piece(Piece::King, getKleur() == wit ? Piece::White : Piece::Black);
     }
 
-    vector<pair<int, int>> mogelijke_zetten(Game &game);
+    vector<pair<int, int>> possible_moves(Game &game);
 
     bool inCheck= false;
 
@@ -142,7 +142,7 @@ public:
         return Piece(Piece::Queen, getKleur() == wit ? Piece::White : Piece::Black);
     }
 
-    vector<pair<int, int>> mogelijke_zetten(Game &game);
+    vector<pair<int, int>> possible_moves(Game &game);
 
 private:
     pieceName naam = koningin;

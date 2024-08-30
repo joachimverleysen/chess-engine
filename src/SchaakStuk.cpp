@@ -17,7 +17,7 @@ pair<int, int> SchaakStuk::getPos() const {
 vector<pair<int, int>> SchaakStuk::validMoves(Game &game) {
     vector<pair<int,int>> result;
 
-    for (auto p : mogelijke_zetten(game)) {
+    for (auto p : possible_moves(game)) {
         if (testSelfCheck(game, p.first, p.second)) continue;
         result.push_back(p);
 
@@ -65,7 +65,7 @@ vector<pair<int, int>> SchaakStuk::attackingSquares(Game &game) {
     // Returns vector with postitions that are attacked by this piece
     vector<pair<int,int>> result;
 
-    for (auto pos : mogelijke_zetten(game)) {
+    for (auto pos : possible_moves(game)) {
         if (game.getPiece(pos.first, pos.second) != nullptr) { // Opponent's piece in vision
             result.emplace_back(pos.first, pos.second); // Push position to result
         }
@@ -82,7 +82,7 @@ bool inRange(pair<int, int> &pos) {
     return pos.first>=0 && pos.first<8 &&
     pos.second >=0 && pos.second <8;
 }
-vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
+vector<pair<int, int>> Pion::possible_moves(Game &game) {
 
     vector<pair<int, int>> result;
 
@@ -150,7 +150,7 @@ vector<pair<int, int>> Pion::mogelijke_zetten(Game &game) {
 }
 
 
-vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van ChatGPT
+vector<pair<int, int>> Loper::possible_moves(Game &game) {    // met hulp van ChatGPT
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
@@ -216,7 +216,7 @@ vector<pair<int, int>> Loper::mogelijke_zetten(Game &game) {    // met hulp van 
     return result;
 }
 
-vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
+vector<pair<int, int>> Toren::possible_moves(Game &game) {
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
@@ -274,7 +274,7 @@ vector<pair<int, int>> Toren::mogelijke_zetten(Game &game) {
 
     return result;
 }
-vector<pair<int, int>> Koning::mogelijke_zetten(Game &game) {       // met hulp van ChatGPT
+vector<pair<int, int>> Koning::possible_moves(Game &game) {       // met hulp van ChatGPT
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
@@ -301,7 +301,7 @@ vector<pair<int, int>> Koning::mogelijke_zetten(Game &game) {       // met hulp 
 
 
 
-vector<pair<int, int>> Paard::mogelijke_zetten(Game &game) {
+vector<pair<int, int>> Paard::possible_moves(Game &game) {
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
@@ -326,7 +326,7 @@ vector<pair<int, int>> Paard::mogelijke_zetten(Game &game) {
     return result;
 }
 
-vector<pair<int, int>> Koningin::mogelijke_zetten(Game &game) {
+vector<pair<int, int>> Koningin::possible_moves(Game &game) {
     vector<pair<int, int>> result;
     pair<int, int> myPos(getPos());
 
