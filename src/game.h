@@ -59,8 +59,6 @@ public:
     Game();
     ~Game();
 
-    bool playAgainstAI = false;
-
     int moveCount=0;
     bool isCastleMove_=false;
     CastlingRook castlingRook;

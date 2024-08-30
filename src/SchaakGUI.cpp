@@ -196,54 +196,52 @@ void SchaakGUI::open() {
 }
 
 void SchaakGUI::undo() {
-    if (!g.playAgainstAI) {
-        message("UNDO");
+    message("UNDO");
 
-        if (g.undoStack.previous_position.empty()) return;
-        pair<int, int> previous_position = g.undoStack.previous_position.back();
-        SchaakStuk *piece = g.undoStack.moving_piece.back();
-        pair<int, int> current_position(piece->getPos());
+    if (g.undoStack.previous_position.empty()) return;
+    pair<int, int> previous_position = g.undoStack.previous_position.back();
+    SchaakStuk *piece = g.undoStack.moving_piece.back();
+    pair<int, int> current_position(piece->getPos());
 
-        auto captured = g.undoStack.captured_piece.back();
+    auto captured = g.undoStack.captured_piece.back();
 
-        g.setPiece(previous_position.first, previous_position.second, piece);
-        piece->setPos(previous_position);
-        if (!g.undoStack.captured_piece.empty() && g.undoStack.captured_piece.back() != nullptr)
-            g.setPiece(current_position.first, current_position.second, captured);
-        else g.setPiece(current_position.first, current_position.second, nullptr);
+    g.setPiece(previous_position.first, previous_position.second, piece);
+    piece->setPos(previous_position);
+    if (!g.undoStack.captured_piece.empty() && g.undoStack.captured_piece.back() != nullptr)
+        g.setPiece(current_position.first, current_position.second, captured);
+    else g.setPiece(current_position.first, current_position.second, nullptr);
+    update();
+
+    if ((g.undoStack.castling_rook.back().piece != nullptr) && piece->getNaam() == koning) {
+        CastlingRook castling_rook(
+                g.undoStack.castling_rook.back().piece,
+                g.undoStack.castling_rook.back().piece->getPos()
+        );
+        auto rook_pos_orig = g.undoStack.castling_rook.back().position;
+        auto rookPos = castling_rook.piece->getPos();
+        g.setPiece(rook_pos_orig.first, rook_pos_orig.second, castling_rook.piece);
+        g.setPiece(rookPos.first, rookPos.second, nullptr);
+        castling_rook.piece->setPos(rook_pos_orig);
+        if (piece->getKleur()==wit);
+        g.redoStack.pushCastlingRook(castling_rook);
         update();
-
-        if ((g.undoStack.castling_rook.back().piece != nullptr) && piece->getNaam() == koning) {
-            CastlingRook castling_rook(
-                    g.undoStack.castling_rook.back().piece,
-                    g.undoStack.castling_rook.back().piece->getPos()
-            );
-            auto rook_pos_orig = g.undoStack.castling_rook.back().position;
-            auto rookPos = castling_rook.piece->getPos();
-            g.setPiece(rook_pos_orig.first, rook_pos_orig.second, castling_rook.piece);
-            g.setPiece(rookPos.first, rookPos.second, nullptr);
-            castling_rook.piece->setPos(rook_pos_orig);
-            if (piece->getKleur()==wit);
-            g.redoStack.pushCastlingRook(castling_rook);
-            update();
-        }
-
-        if (piece->getNaam()==koning) {
-            if (piece->getKleur()==wit && g.firstWhiteKingMove==g.moveCount) {
-                g.firstWhiteKingMove = -1;
-            }
-        }
-        if (piece->getNaam()==koning) {
-            if (piece->getKleur()==zwart && g.firstBlackKingMove==g.moveCount) {
-                g.firstBlackKingMove = -1;
-            }
-        }
-
-        g.undoStack.pop();
-        g.undoStack.popCastlingRook();
-        g.redoStack.push(piece, captured, current_position);
-        g.moveCount--;  // decrement movecount
     }
+
+    if (piece->getNaam()==koning) {
+        if (piece->getKleur()==wit && g.firstWhiteKingMove==g.moveCount) {
+            g.firstWhiteKingMove = -1;
+        }
+    }
+    if (piece->getNaam()==koning) {
+        if (piece->getKleur()==zwart && g.firstBlackKingMove==g.moveCount) {
+            g.firstBlackKingMove = -1;
+        }
+    }
+
+    g.undoStack.pop();
+    g.undoStack.popCastlingRook();
+    g.redoStack.push(piece, captured, current_position);
+    g.moveCount--;  // decrement movecount
 }
 
 void SchaakGUI::redo() {
