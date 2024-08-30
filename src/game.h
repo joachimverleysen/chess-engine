@@ -118,7 +118,7 @@ public:
     void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected,
                                pair<int, int> selectionPos);
 
-    void movePiece(int r, int k, SchaakStuk *s, pair<int, int> current_position, pair<int, int> target_position);
+    void movePiece(SchaakStuk *piece, pair<int, int> target_position);
 };
 
 #endif //SCHAKEN_GAME_H

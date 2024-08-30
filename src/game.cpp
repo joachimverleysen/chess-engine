@@ -84,11 +84,12 @@ SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* ki
 // en verandert er niets aan het schaakbord.
 // Anders wordt de move uitgevoerd en wordt true teruggegeven
 
-void Game::movePiece(int r, int k, SchaakStuk* s, pair<int,int> current_position, pair<int,int> target_position) {
-    setPiece(r,k,s);
-    setPiece(current_position.first, current_position.second, nullptr);
-    s->setPos(target_position);
+void Game::movePiece(SchaakStuk *piece, pair<int, int> target_position) {
+    setPiece(target_position.first, target_position.second, piece);
+    setPiece(piece->getPos().first, piece->getPos().second, nullptr);
+    piece->setPos(target_position);
 }
+
 
 bool Game::move(SchaakStuk* s, int r, int k) {
 
@@ -146,7 +147,7 @@ bool Game::move(SchaakStuk* s, int r, int k) {
 
     // move piece
     if (it != possible_moves.end()) {
-        movePiece(r, k, s, current_position, target_position);
+        movePiece(s, target_position);
         return true;
     }
     return false;
