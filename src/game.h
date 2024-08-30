@@ -67,7 +67,7 @@ public:
     bool whiteToMove() const;
 
     zw colorToMove() const;
-    bool move(SchaakStuk* s,int r, int k);
+    bool move(SchaakStuk* piece, int row, int col);
 
     pair<int,int> findKing(zw kleur) const;
     bool schaak(zw kleur);
@@ -118,7 +118,7 @@ public:
     void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected,
                                pair<int, int> selectionPos);
 
-    void movePiece(SchaakStuk *piece, pair<int, int> target_position);
+    void movePiece(SchaakStuk *piece, int row, int col);
 };
 
 #endif //SCHAKEN_GAME_H
