@@ -62,7 +62,7 @@ public:
     bool playAgainstAI = false;
 
     int moveCount=0;
-    bool isCastleMove=false;
+    bool isCastleMove_=false;
     CastlingRook castlingRook;
     bool whiteToMove() const;
 
@@ -70,11 +70,11 @@ public:
     bool move(SchaakStuk* piece, int row, int col);
 
     pair<int,int> findKing(zw kleur) const;
-    bool schaak(zw kleur);
+    bool schaak(zw kleur) const;
     bool schaakmat(zw kleur);
     bool pat(zw kleur);
     void setStartBord();
-    vector<pair<int,int>> controlledSquares(zw kleur);
+    vector<pair<int,int>> controlledSquares(zw kleur) const;
 
     SchaakStuk* getPiece(int r, int k) const;
     void setPiece(int r, int k, SchaakStuk* s);
@@ -103,22 +103,26 @@ public:
     SchaakStuk* tempCapturedPiece=nullptr;
 
 
-    bool kingSideCastleIsValid(zw kleur);
+    bool kingSideCastleIsValid(zw kleur) const;
 
     void executeCastle(zw kleur, pair<int, int> pos);
 
-    bool queenSideCastleIsValid(zw kleur);
+    bool queenSideCastleIsValid(zw kleur) const;
 
     vector<pair<int, int>> piecesInVision(zw kleur);
 
     void promote(int r, int k);
 
-    SchaakStuk *getCastlingRook(pair<int, int> king_target_pos, SchaakStuk *king);
+    SchaakStuk *getCastlingRook(pair<int, int> king_target_pos, SchaakStuk *king) const;
 
     void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition, SchaakStuk *selected,
                                pair<int, int> selectionPos);
 
     void movePiece(SchaakStuk *piece, int row, int col);
+
+    bool isEnPassantMove(SchaakStuk *piece, pair<int, int> target_position) const;
+
+    static bool isCastleMove(SchaakStuk *piece, pair<int, int> target_position) ;
 };
 
 #endif //SCHAKEN_GAME_H

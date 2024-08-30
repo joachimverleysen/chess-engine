@@ -114,7 +114,7 @@ void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, 
     g.redoStack.push(nullptr, clickedItem, selectionPos);
 
     CastlingRook castlingRook(nullptr, pair<int, int>());
-    if (g.isCastleMove) {
+    if (g.isCastleMove_) {
         castlingRook.piece = g.castlingRook.piece;
         castlingRook.position = g.castlingRook.position;
     }

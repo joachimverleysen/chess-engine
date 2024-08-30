@@ -63,7 +63,7 @@ void Game::setStartBord() {
 
 }
 
-SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* king) {
+SchaakStuk* Game::getCastlingRook(pair<int, int> king_target_pos, SchaakStuk* king) const {
     auto kingPos = king->getPos();
     bool kingside = true;
     if (king_target_pos.second < kingPos.second)  kingside=false;
@@ -90,7 +90,23 @@ void Game::movePiece(SchaakStuk *piece, int row, int col) {
     piece->setPos(pair<int,int>(row,col));
 }
 
+bool Game::isEnPassantMove(SchaakStuk* piece, pair<int,int> target_position) const {
+    if (piece->getNaam() != pion) return false;
+    if (enPassantSquare.first == -1) return false;
+    if (piece->getPos().second == target_position.second) return false;
+    if (getPiece(target_position.first, target_position.second) != nullptr) return false;
+    if (pair<int,int>(target_position.first, target_position.second) != enPassantSquare) return false;
+    if (enPassantTargetPos.first == -1) return false;
+    return true;
+}
 
+bool Game::isCastleMove(SchaakStuk* piece, pair<int,int> target_position) {
+    int row = target_position.first;
+    int col = target_position.second;
+    if (piece->getNaam() != koning) return false;
+    if (abs(piece->getPos().second - col) <= 1) return false;
+    return true;
+}
 
 bool Game::move(SchaakStuk* piece, int row, int col) {
 
@@ -98,17 +114,8 @@ bool Game::move(SchaakStuk* piece, int row, int col) {
         return false;
     }
 
-    // check en passant
-    bool enpassant = true;
-    if (piece->getNaam() != pion) enpassant = false;
-    if (enPassantSquare.first == -1) enpassant = false;
-    if (piece->getPos().second == col) enpassant = false;
-    if (getPiece(row, col) != nullptr) enpassant = false;
-    if (pair<int,int>(row, col) != enPassantSquare) enpassant = false;
-    if (enPassantTargetPos.first == -1) enpassant = false;
-
     // do en passant
-    if (enpassant) {
+    if (isEnPassantMove(piece, pair<int,int>(row, col))) {
         setPiece(row, col, piece);
         piece->setPos(pair<int,int>(row, col));
         setPiece(piece->getPos().first, piece->getPos().second, nullptr);
@@ -122,7 +129,7 @@ bool Game::move(SchaakStuk* piece, int row, int col) {
     }
 
     // check castle, do castle
-    isCastleMove=false;
+    isCastleMove_=false;
     if (piece->getNaam() == koning &&
         abs(piece->getPos().second - col) > 1) {
         auto castling_rook_piece = getCastlingRook(pair<int,int>(row, col), piece);
@@ -133,7 +140,7 @@ bool Game::move(SchaakStuk* piece, int row, int col) {
             castlingRook.piece = castling_rook_piece;
             castlingRook.position = castling_rook_piece->getPos();
             executeCastle(piece->getKleur(), pair<int,int>(row, col));
-            isCastleMove=true;
+            isCastleMove_=true;
 
         }
 
@@ -253,13 +260,13 @@ bool Game::fakeMove(SchaakStuk* s, int r, int k) {
 }
 
 
-bool Game::schaak(zw kleur) {
+bool Game::schaak(zw kleur) const {
     pair<int, int> kingPos = findKing(kleur);
 
     for (auto piece : getActivePieces()) {
         if (piece == nullptr || piece->getKleur() == kleur) continue;
 
-        vector<pair<int, int>> attackingSquares = piece->attackingSquares(*this);
+        vector<pair<int, int>> attackingSquares = piece->attackingSquares(const_cast<Game &>(*this));
         if (find(attackingSquares.begin(), attackingSquares.end(), kingPos) != attackingSquares.end()) {
             return true;
         }
@@ -330,7 +337,7 @@ vector<SchaakStuk *> Game::getActivePieces() const {
     return result;
 };
 
-bool Game::kingSideCastleIsValid(zw kleur) {
+bool Game::kingSideCastleIsValid(zw kleur) const {
     if (kleur==zwart && firstBlackKingMove!=-1) return false;
     if (kleur==wit && firstWhiteKingMove!=-1) return false;
     if (schaak(kleur)) return false;
@@ -358,7 +365,7 @@ void Game::promote(int r, int k) {
 }
 
 
-bool Game::queenSideCastleIsValid(zw kleur) {
+bool Game::queenSideCastleIsValid(zw kleur) const {
 
 
     if (kleur==zwart && blackKingMoved) return false;
@@ -402,7 +409,7 @@ vector<pair<int,int>> Game::kingControls(zw kleur) const {
     return result;
 
 }
-vector<pair<int, int>> Game::controlledSquares(zw kleur) {
+vector<pair<int, int>> Game::controlledSquares(zw kleur) const {
     vector<pair<int,int>> result;
     vector<SchaakStuk*> activePieces = getActivePieces();
 
@@ -434,7 +441,7 @@ vector<pair<int, int>> Game::controlledSquares(zw kleur) {
             vector<pair<int,int>> v = kingControls(kleur);
             result.insert(result.end(), v.begin(), v.end());
         } else {
-            vector<pair<int,int>> v = p->validMoves(*this);
+            vector<pair<int,int>> v = p->validMoves(const_cast<Game &>(*this));
             result.insert(result.end(), v.begin(), v.end());
        }
     }
