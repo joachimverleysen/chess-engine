@@ -57,6 +57,8 @@ private:
     void doPieceThreatMarking();
 
     void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition);
+
+    void handleSelection(int r, int k);
 };
 
 #endif //SCHAKEN_SCHAAKGUI_H
