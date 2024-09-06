@@ -135,8 +135,7 @@ void SchaakGUI::updateGameInfo(const pair<int, int> clickedPos, const pair<int, 
     }
 
     g.updateEnPassantTarget(clickedPos, current_pos, selectedPiece);
-    if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==zwart);
-    else if (selectedPiece->getNaam()==koning && selectedPiece->getKleur()==wit);
+
 
     pieceSelected=false;
     updateMarking();
