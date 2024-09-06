@@ -80,18 +80,9 @@ void SchaakGUI::handleSelection(int r, int k) {
     updateMarking();
 
 }
-
-void SchaakGUI::clicked(int r, int k) {
-    if (g.schaakmat(wit) || g.schaakmat(zwart) || g.pat(wit) || g.pat(zwart)) return;
-    pair<int, int> clickedPos(r, k);
-    clickedItem = g.getPiece(r, k);
-
-    if (!pieceSelected) {
-        handleSelection(r, k);
-        return;
-    }
-
+void SchaakGUI::handleMovement(int r, int k) {
     vector<pair<int, int>> validMoves = selectedPiece->validMoves(g);
+    pair<int, int> clickedPos(r, k);
 
     auto it = std::find(validMoves.begin(), validMoves.end(), clickedPos);
     if (it != validMoves.end()) {
@@ -101,6 +92,18 @@ void SchaakGUI::clicked(int r, int k) {
     }
     removeAllMarking();
     pieceSelected = false;
+}
+
+void SchaakGUI::clicked(int r, int k) {
+    if (g.schaakmat(wit) || g.schaakmat(zwart) || g.pat(wit) || g.pat(zwart)) return;
+    clickedItem = g.getPiece(r, k);
+
+    if (!pieceSelected) {
+        handleSelection(r, k);
+        return;
+    }
+    else handleMovement(r, k);
+
     update();
 }
 

@@ -59,6 +59,8 @@ private:
     void updateEnPassantTarget(pair<int, int> clickedPos, pair<int, int> myPosition);
 
     void handleSelection(int r, int k);
+
+    void handleMovement(int r, int k);
 };
 
 #endif //SCHAKEN_SCHAAKGUI_H
