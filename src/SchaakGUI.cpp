@@ -68,13 +68,17 @@ void SchaakGUI::updateMarking() {
 }
 
 void SchaakGUI::handleSelection(int r, int k) {
-    clickedItem = g.getPiece(r, k);
-    if (clickedItem == nullptr) return;
-    if (clickedItem->getKleur() != g.colorToMove()) return;
+    if (clickedItem == nullptr)
+        return;
+    if (clickedItem->getKleur() != g.colorToMove())
+        return;
+
     pieceSelected=true;
     selectedPiece = clickedItem;
-    selectionPos = {r, k};
+    selectionPos.first = r;
+    selectionPos.second = k;
     updateMarking();
+
 }
 
 void SchaakGUI::clicked(int r, int k) {
@@ -86,7 +90,6 @@ void SchaakGUI::clicked(int r, int k) {
         handleSelection(r, k);
         return;
     }
-
 
     pair<int,int> activePiecePosition = selectedPiece->getPos();
     if (selectionPos == clickedPos) {
