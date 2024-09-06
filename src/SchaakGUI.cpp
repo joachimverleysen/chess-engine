@@ -91,25 +91,16 @@ void SchaakGUI::clicked(int r, int k) {
         return;
     }
 
-    pair<int,int> activePiecePosition = selectedPiece->getPos();
-    if (selectionPos == clickedPos) {
-        pieceSelected = false;
-        vector<pair<int,int>> validMoves = selectedPiece->validMoves(g);
-        removeAllMarking();
-        updateMarking();
-        update();
-
-        return;
-    }
     vector<pair<int, int>> validMoves = selectedPiece->validMoves(g);
 
     auto it = std::find(validMoves.begin(), validMoves.end(), clickedPos);
     if (it != validMoves.end()) {
         g.move(selectedPiece, clickedPos.first, clickedPos.second);
-        removeAllMarking();
-        updateGameInfo(clickedPos, activePiecePosition);
+        updateGameInfo(clickedPos, selectedPiece->getPos());
 
     }
+    removeAllMarking();
+    pieceSelected = false;
     update();
 }
 
