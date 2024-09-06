@@ -66,6 +66,10 @@ void SchaakGUI::updateMarking() {
 
     }
 }
+//
+//void SchaakGUI::handleSelection(int r, int k) {
+//
+//}
 
 void SchaakGUI::clicked(int r, int k) {
     if (g.schaakmat(wit) || g.schaakmat(zwart) || g.pat(wit) || g.pat(zwart)) return;
@@ -80,8 +84,7 @@ void SchaakGUI::clicked(int r, int k) {
     else if (!pieceSelected) {
         pieceSelected=true;
         selectedPiece = clickedItem;
-        selectionPos.first = r;
-        selectionPos.second = k;
+        selectionPos = {r, k};
         updateMarking();
 
         return;
